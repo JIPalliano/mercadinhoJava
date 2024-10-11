@@ -1,14 +1,7 @@
 package com.example.mercadinho;
 
-import com.example.mercadinho.model.ProductEntity;
-import com.example.mercadinho.model.ShoppingCartEntity;
-import com.example.mercadinho.repository.ProductRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @SpringBootApplication
 public class MercadinhoApplication {

@@ -1,4 +1,4 @@
-package com.example.mercadinho.model;
+package com.example.mercadinho.repository.model;
 
 import lombok.Builder;
 import org.springframework.data.annotation.Id;

@@ -1,7 +1,7 @@
 package com.example.mercadinho.controller;
 
-import com.example.mercadinho.impl.ProductFacade;
-import com.example.mercadinho.model.ProductEntity;
+import com.example.mercadinho.service.ProductFacade;
+import com.example.mercadinho.repository.model.ProductEntity;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +27,8 @@ public class ProductController {
     }
 
     @GetMapping(path="/")
-    public List<ProductEntity> findAll(HttpServletResponse response) {
-        return this.facade.findAll(response);
+    public List<ProductEntity> findAll() {
+        return this.facade.findAll();
     }
 
 

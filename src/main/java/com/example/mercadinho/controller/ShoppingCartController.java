@@ -1,7 +1,7 @@
 package com.example.mercadinho.controller;
 
 
-import com.example.mercadinho.model.ShoppingCartEntity;
+import com.example.mercadinho.repository.model.ShoppingCartEntity;
 import com.example.mercadinho.repository.ShoppingCartRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

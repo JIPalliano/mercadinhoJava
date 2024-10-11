@@ -1,6 +1,6 @@
-package com.example.mercadinho.impl;
+package com.example.mercadinho.service;
 
-import com.example.mercadinho.model.ProductEntity;
+import com.example.mercadinho.repository.model.ProductEntity;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
@@ -11,5 +11,5 @@ public interface ProductFacade{
 
     ProductEntity findById(String id);
 
-    List<ProductEntity> findAll(HttpServletResponse response);
+    List<ProductEntity> findAll();
 }

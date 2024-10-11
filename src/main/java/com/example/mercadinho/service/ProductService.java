@@ -1,6 +1,6 @@
-package com.example.mercadinho.impl;
+package com.example.mercadinho.service;
 
-import com.example.mercadinho.model.ProductEntity;
+import com.example.mercadinho.repository.model.ProductEntity;
 import com.example.mercadinho.repository.ProductRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,10 +26,7 @@ public class ProductService implements ProductFacade{
     }
 
     @Override
-    public List<ProductEntity> findAll(HttpServletResponse response){
-        Cookie cookie = new Cookie("Cookie-e-bom-nada","value");
-        cookie.setMaxAge(3600);
-        response.addCookie(cookie);
+    public List<ProductEntity> findAll(){
         return repository.findAll();
     }
 
