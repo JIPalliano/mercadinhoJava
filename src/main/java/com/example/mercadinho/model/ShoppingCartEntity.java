@@ -9,6 +9,7 @@ import java.util.List;
 public record ShoppingCartEntity(
         @Id
         String id,
-        List<ProductEntity> products
+        List<ProductEntity> products,
+        String date
 ) {
 }
