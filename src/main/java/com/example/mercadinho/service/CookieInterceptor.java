@@ -9,6 +9,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class CookieInterceptor implements HandlerInterceptor {
 
+    CookieService cookieService;
+
     // Intercepta a requisição antes de chegar ao controlador
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
