@@ -1,42 +1,40 @@
 package com.example.mercadinho.controller;
 
 
+import com.example.mercadinho.repository.ProductRepository;
+import com.example.mercadinho.repository.model.ProductEntity;
 import com.example.mercadinho.repository.model.ShoppingCartEntity;
-import com.example.mercadinho.repository.ShoppingCartRepository;
+import com.example.mercadinho.service.ShoppingCartFacade;
+import com.example.mercadinho.service.ShoppingCartService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(path="/merchandiser/Shopping-cart")
+@RequestMapping(path="/shopping-cart")
 public class ShoppingCartController {
 
 
-    final ShoppingCartRepository repository;
+    final ShoppingCartFacade facade;
 
     @PostMapping(path="/{id}")
-    public ShoppingCartEntity createShoppingcart(@PathVariable("id") String id, @RequestBody ShoppingCartEntity request) {
-        LocalDateTime dateLocal = LocalDateTime.now();
-        DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        var object = ShoppingCartEntity.builder().id(request.id()).products(request.products()).date(dt.format(dateLocal)).build();
-        //repository.findById(id).ifPresent(shoppingCart -> request.products().add(shoppingCart));
-        return repository.save(object);
+    public ShoppingCartEntity createShoppingCart(@PathVariable("id") String id, ShoppingCartEntity request) {
+        return facade.createShoppingCart(id, request);
     }
 
-    @GetMapping(path="/{id-product}/{id-shopping-cart}")
-    public ShoppingCartEntity findShoppingCartAdd(@PathVariable("id-product") String idProduct, @PathVariable("id-shopping-cart") String idShoppingCart, @RequestBody ShoppingCartEntity request) {
-        var object = ShoppingCartEntity.builder().id(idShoppingCart).products(request.products()).build();
-        //repository.findById(idProduct).ifPresent(shoppingCart -> request.products().add(shoppingCart));
-        return repository.save(object);
+    @PutMapping(path="/{id-product}/{id-shopping-cart}")
+    public ShoppingCartEntity findShoppingCartAdd(@PathVariable("id-product") String idProduct,
+                                                  @PathVariable("id-shopping-cart") String idShoppingCart,
+                                                  ShoppingCartEntity response,
+                                                  ProductEntity productResponse) {
+        return this.facade.findShoppingCartAdd(idProduct, idShoppingCart, response, productResponse);
     }
 
     @GetMapping(path="/")
-    public List<ShoppingCartEntity> findAllShoppingcart() {
-        return this.repository.findAll();
+    public List<ShoppingCartEntity> findAll() {
+        return this.facade.findAll();
     }
 
 }

@@ -2,8 +2,6 @@ package com.example.mercadinho.service;
 
 import com.example.mercadinho.repository.model.ProductEntity;
 import com.example.mercadinho.repository.ProductRepository;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +19,8 @@ public class ProductService implements ProductFacade{
     }
 
     @Override
-    public ProductEntity findById(String id){
-        return repository.findById(id).orElse(null);
+    public ProductEntity findById(ProductEntity id){
+        return repository.findById(id.id()).orElse(null);
     }
 
     @Override

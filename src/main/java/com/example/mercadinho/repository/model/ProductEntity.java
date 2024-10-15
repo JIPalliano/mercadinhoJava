@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 
 @Builder
-@Document(collection = "product")
+@Document(collection = "productEntity")
 public record ProductEntity(
         @Id
         String id,

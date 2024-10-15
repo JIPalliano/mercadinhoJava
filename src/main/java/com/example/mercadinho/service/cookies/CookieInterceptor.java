@@ -1,4 +1,4 @@
-package com.example.mercadinho.service;
+package com.example.mercadinho.service.cookies;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

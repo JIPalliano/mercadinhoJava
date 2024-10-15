@@ -1,6 +1,6 @@
 package com.example.mercadinho.controller;
 
-import com.example.mercadinho.service.CookieService;
+import com.example.mercadinho.service.cookies.CookieService;
 import com.example.mercadinho.service.ProductFacade;
 import com.example.mercadinho.repository.model.ProductEntity;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ public class ProductController {
     }
 
     @GetMapping(path="/{id}")
-    public ProductEntity findById(@PathVariable("id") String id) {
+    public ProductEntity findById(@PathVariable("id") ProductEntity id) {
         return this.facade.findById(id);
     }
 
