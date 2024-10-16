@@ -31,7 +31,7 @@ public class ProductController {
 
     @GetMapping(path="/")
     public List<ProductEntity> findAll() {
-        cookieService.createCookie(response , "cookie-e-bom-nada", "valor-do-cookie", 3600);
+        cookieService.createCookie(response, "cookie-e-bom-nada", "valor-do-cookie", 3600);
         return this.facade.findAll();
     }
 

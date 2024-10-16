@@ -4,6 +4,9 @@ import com.example.mercadinho.repository.ProductRepository;
 import com.example.mercadinho.repository.ShoppingCartRepository;
 import com.example.mercadinho.repository.model.ProductEntity;
 import com.example.mercadinho.repository.model.ShoppingCartEntity;
+import com.example.mercadinho.service.cookies.CookieService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,8 @@ public class ShoppingCartService implements ShoppingCartFacade {
 
     final ShoppingCartRepository repository;
     final ProductRepository productRepository;
+    final HttpServletRequest request;
+    CookieService cookie;
 
     @Override
     public ShoppingCartEntity createShoppingCart(String id, ShoppingCartEntity request) {
@@ -28,15 +33,23 @@ public class ShoppingCartService implements ShoppingCartFacade {
     }
 
     @Override
-    public ShoppingCartEntity findShoppingCartAdd(String idProduct, String idShoppingCart, ShoppingCartEntity response, ProductEntity productResponse) {
+    public ShoppingCartEntity findShoppingCartAdd(String idProduct, String idShoppingCart, HttpServletResponse response, ProductEntity productResponse) {
         var object = repository.findById(idShoppingCart).orElse(null);
         productRepository.findById(idProduct).ifPresent(shoppingCart -> object.products().add(shoppingCart));
-        return repository.save(object);
+        cookie.createCookie(response ,"Carrinho-salvado", object.id(), 3600);
+        System.out.println(cookie.readCookie(request, "Carrinho-salvado"));
+        return object;
     }
 
     @Override
     public List<ShoppingCartEntity> findAll() {
         return this.repository.findAll();
+    }
+
+    @Override
+    public ShoppingCartEntity findShoppingCartCookie(){
+        var object = repository.findById(cookie.readCookie(request, "Carrinho-salvado")).orElse(null);
+        return object;
     }
 
 }

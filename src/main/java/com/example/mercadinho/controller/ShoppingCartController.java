@@ -6,6 +6,7 @@ import com.example.mercadinho.repository.model.ProductEntity;
 import com.example.mercadinho.repository.model.ShoppingCartEntity;
 import com.example.mercadinho.service.ShoppingCartFacade;
 import com.example.mercadinho.service.ShoppingCartService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class ShoppingCartController {
     @PutMapping(path="/{id-product}/{id-shopping-cart}")
     public ShoppingCartEntity findShoppingCartAdd(@PathVariable("id-product") String idProduct,
                                                   @PathVariable("id-shopping-cart") String idShoppingCart,
-                                                  ShoppingCartEntity response,
+                                                  HttpServletResponse response,
                                                   ProductEntity productResponse) {
         return this.facade.findShoppingCartAdd(idProduct, idShoppingCart, response, productResponse);
     }
@@ -35,6 +36,11 @@ public class ShoppingCartController {
     @GetMapping(path="/")
     public List<ShoppingCartEntity> findAll() {
         return this.facade.findAll();
+    }
+
+    @GetMapping(path="/cookie")
+    public ShoppingCartEntity findShoppingCartCookie() {
+        return this.facade.findShoppingCartCookie();
     }
 
 }
