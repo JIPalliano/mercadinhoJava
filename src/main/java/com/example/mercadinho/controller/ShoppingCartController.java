@@ -1,11 +1,9 @@
 package com.example.mercadinho.controller;
 
 
-import com.example.mercadinho.repository.ProductRepository;
 import com.example.mercadinho.repository.model.ProductEntity;
 import com.example.mercadinho.repository.model.ShoppingCartEntity;
 import com.example.mercadinho.service.ShoppingCartFacade;
-import com.example.mercadinho.service.ShoppingCartService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
