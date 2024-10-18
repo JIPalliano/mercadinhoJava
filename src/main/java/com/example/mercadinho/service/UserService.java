@@ -24,8 +24,8 @@ public class UserService implements UserFacade, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findById(username)
-                .map(user -> new UserAuthenticated(user))
+        return userRepository.findByName(username)
+                .map(UserAuthenticated::new)
                 .orElseThrow(
                         () -> new UsernameNotFoundException("User Not Found with username: " + username));
     }

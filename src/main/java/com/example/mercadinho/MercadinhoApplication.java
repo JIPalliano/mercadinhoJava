@@ -15,9 +15,9 @@ public class MercadinhoApplication {
 //		System.out.println("JSESSIONID: " + cookie.getValue());
 	}
 
-	@Bean
-	ApplicationRunner runner(PasswordEncoder passwordEncoder) {
-		return args -> System.out.println(passwordEncoder.encode("password"));
-	}
+//	@Bean
+//	ApplicationRunner runner(PasswordEncoder passwordEncoder) {
+//		return args -> System.out.println(passwordEncoder.encode("password"));
+//	}
 
 }
