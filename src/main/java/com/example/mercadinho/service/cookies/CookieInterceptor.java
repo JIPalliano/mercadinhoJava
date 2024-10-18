@@ -1,5 +1,6 @@
 package com.example.mercadinho.service.cookies;
 
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,8 +9,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 public class CookieInterceptor implements HandlerInterceptor {
-
-    CookieService cookieService;
 
     // Intercepta a requisição antes de chegar ao controlador
     @Override
@@ -30,4 +29,5 @@ public class CookieInterceptor implements HandlerInterceptor {
 
         return true; // Continua a execução da requisição
     }
+
 }

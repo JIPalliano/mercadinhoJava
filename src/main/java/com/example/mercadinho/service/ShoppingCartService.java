@@ -48,8 +48,7 @@ public class ShoppingCartService implements ShoppingCartFacade {
 
     @Override
     public ShoppingCartEntity findShoppingCartCookie(){
-        var object = repository.findById(cookie.readCookie(request, "Carrinho-salvado")).orElse(null);
-        return object;
+        return repository.findById(cookie.readCookie(request, "Carrinho-salvado")).orElse(null);
     }
 
 }

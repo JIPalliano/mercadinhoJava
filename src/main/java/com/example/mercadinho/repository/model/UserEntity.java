@@ -15,7 +15,7 @@ public class UserEntity {
 
     UserEntity(){}
 
-    UserEntity(String name, String password) {
+    public UserEntity(String name, String password) {
         this.name = name;
         this.password = password;
     }

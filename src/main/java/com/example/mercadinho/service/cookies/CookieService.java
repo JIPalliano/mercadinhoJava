@@ -3,7 +3,10 @@ package com.example.mercadinho.service.cookies;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.session.CookieWebSessionIdResolver;
+import org.springframework.web.server.session.WebSessionIdResolver;
 
 @Service
 public class CookieService {
@@ -35,5 +38,12 @@ public class CookieService {
         cookie.setPath("/");
         cookie.setMaxAge(0); // Expira o cookie imediatamente
         response.addCookie(cookie);
+    }
+
+    @Bean
+    public WebSessionIdResolver cookieSerializer() {
+        CookieWebSessionIdResolver resolver = new CookieWebSessionIdResolver();
+        resolver.setCookieName("MYLOGGIN");
+        return resolver;
     }
 }
