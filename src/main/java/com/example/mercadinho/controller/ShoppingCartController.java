@@ -4,19 +4,21 @@ package com.example.mercadinho.controller;
 import com.example.mercadinho.domain.repository.model.ProductEntity;
 import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
 import com.example.mercadinho.service.ShoppingCartFacade;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
-@RequestMapping(path="/shopping-cart")
+@RequiredArgsConstructor
+@RequestMapping(path="v1/shopping-cart")
 public class ShoppingCartController {
 
 
-    final ShoppingCartFacade facade;
+    private final ShoppingCartFacade facade;
 
     @PostMapping(path="/{id}")
     public ShoppingCartEntity createShoppingCart(@PathVariable("id") String id, ShoppingCartEntity request) {
@@ -31,7 +33,7 @@ public class ShoppingCartController {
         return this.facade.findShoppingCartAdd(idProduct, idShoppingCart, response, productResponse);
     }
 
-    @GetMapping(path="/")
+    @GetMapping
     public List<ShoppingCartEntity> findAll() {
         return this.facade.findAll();
     }

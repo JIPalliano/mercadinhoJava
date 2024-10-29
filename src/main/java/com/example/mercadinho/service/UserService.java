@@ -6,6 +6,7 @@ import com.example.mercadinho.controller.response.LoginResponse;
 import com.example.mercadinho.controller.response.UserResponse;
 import com.example.mercadinho.domain.repository.UserRepository;
 import com.example.mercadinho.domain.repository.model.UserEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,14 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserService{
 
     private final UserRepository userRepository;
-    private final PasswordEncryption passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
     public UserResponse registerUser(UserRequest request){
         return userRepository.save(UserEntity.builder()
                 .username(request.username())
-                .password(passwordEncoder.encryptPassword(request.password()))
+                .password(passwordEncoder.encode(request.password()))
+                .role(request.role())
                 .build()).fromEntity();
     }
 

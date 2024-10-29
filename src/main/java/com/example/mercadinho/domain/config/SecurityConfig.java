@@ -24,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(jsr250Enabled = true)
+//@EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
 
@@ -33,15 +33,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers(HttpMethod.POST,"/v1/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/v1/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/v1/auth/register").permitAll()
+//                                .requestMatchers("/v1/merchandiser/**").permitAll()
+//                                .requestMatchers("/v1/shopping-cart/**").permitAll()
                                 .anyRequest().authenticated())
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
+
 
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {

@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.text.ParseException;
 import java.util.Date;
 
 @Service
@@ -39,28 +38,25 @@ public class TokenService {
 
     public String validateToken(String token){
         try {
-            // Parseia o token JWT
+            // Parse o token JWT
             SignedJWT signedJWT = SignedJWT.parse(token);
 
-            // Verifica a assinatura do token com a mesma chave secreta
-            JWSVerifier verifier = new MACVerifier(secret);
-            if (!signedJWT.verify(verifier)) {
-                return signedJWT.serialize();
+            // Verifique a assinatura do token usando a chave secreta
+            if (!signedJWT.verify(new MACVerifier(secret))) {
+                return "assinatura for inválida"; // Retorna null se a assinatura for inválida
             }
 
-            // Checa as claims do token
+            // Verifique se o emissor é "auth-token"
             JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
-            Date expirationTime = claims.getExpirationTime();
-            Date now = new Date();
-
-            if (expirationTime == null || expirationTime.before(now)) {
-                return signedJWT.serialize();
+            if (!"mercadinho".equals(claims.getIssuer())) {
+                return "emissor for inválido"; // Retorna null se o emissor for inválido
             }
 
+            // Retorne o assunto (subject) do token
             return claims.getSubject();
-
-        } catch (ParseException | JOSEException e) {
-            return "Erro ao validar o token: " + e.getMessage();
+        } catch (Exception e) {
+            // Trata erros de verificação e parsing do JWT
+            return "parsing do JWT";
         }
     }
 

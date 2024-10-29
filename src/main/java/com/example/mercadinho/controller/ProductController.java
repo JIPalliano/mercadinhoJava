@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(path="/merchandiser")
+@RequestMapping(path="/v1/merchandiser")
 public class ProductController {
 
     final ProductFacade facade;
