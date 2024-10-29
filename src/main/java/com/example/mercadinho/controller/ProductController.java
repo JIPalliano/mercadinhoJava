@@ -2,7 +2,7 @@ package com.example.mercadinho.controller;
 
 
 import com.example.mercadinho.service.ProductFacade;
-import com.example.mercadinho.repository.model.ProductEntity;
+import com.example.mercadinho.domain.repository.model.ProductEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

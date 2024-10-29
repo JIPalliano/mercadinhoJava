@@ -1,8 +1,8 @@
 package com.example.mercadinho.controller;
 
 
-import com.example.mercadinho.repository.model.ProductEntity;
-import com.example.mercadinho.repository.model.ShoppingCartEntity;
+import com.example.mercadinho.domain.repository.model.ProductEntity;
+import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
 import com.example.mercadinho.service.ShoppingCartFacade;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;

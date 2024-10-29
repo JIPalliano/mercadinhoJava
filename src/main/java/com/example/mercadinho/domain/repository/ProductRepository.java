@@ -1,6 +1,6 @@
-package com.example.mercadinho.repository;
+package com.example.mercadinho.domain.repository;
 
-import com.example.mercadinho.repository.model.ProductEntity;
+import com.example.mercadinho.domain.repository.model.ProductEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

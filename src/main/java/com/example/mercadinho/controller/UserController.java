@@ -1,30 +1,32 @@
 package com.example.mercadinho.controller;
 
-import com.example.mercadinho.repository.model.UserEntity;
-import com.example.mercadinho.security.AuthenticationService;
-import com.example.mercadinho.service.UserFacade;
-import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
+import com.example.mercadinho.controller.request.LoginRequest;
+import com.example.mercadinho.controller.request.UserRequest;
+import com.example.mercadinho.controller.response.LoginResponse;
+import com.example.mercadinho.controller.response.UserResponse;
+import com.example.mercadinho.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
+
 @RestController
-@AllArgsConstructor
-@RequestMapping(path="/login")
+@RequestMapping("v1/auth")
+@RequiredArgsConstructor
 public class UserController {
 
-    final UserFacade facade;
-    final private AuthenticationService authenticationService;
+    private final UserService userService;
 
-    @PostMapping(path="/user")
-    public UserEntity createUser(@RequestBody UserEntity request){
-        return this.facade.createUser(request);
+    @PostMapping("login")
+    public LoginResponse loginUser(@RequestBody LoginRequest loginRequest) {
+        return userService.loginUser(loginRequest);
     }
 
-    @PostMapping("authenticate")
-    public String authenticate(
-            Authentication authentication) {
-        return authenticationService.authenticate(authentication);
+    @PostMapping("register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserResponse registerUser(@RequestBody UserRequest request){
+        return userService.registerUser(request);
     }
 
 }

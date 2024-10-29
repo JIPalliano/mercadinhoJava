@@ -1,9 +1,9 @@
 package com.example.mercadinho.service;
 
-import com.example.mercadinho.repository.ProductRepository;
-import com.example.mercadinho.repository.ShoppingCartRepository;
-import com.example.mercadinho.repository.model.ProductEntity;
-import com.example.mercadinho.repository.model.ShoppingCartEntity;
+import com.example.mercadinho.domain.repository.ProductRepository;
+import com.example.mercadinho.domain.repository.ShoppingCartRepository;
+import com.example.mercadinho.domain.repository.model.ProductEntity;
+import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
 import com.example.mercadinho.service.cookies.CookieService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

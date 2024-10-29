@@ -1,6 +1,6 @@
 package com.example.mercadinho.service;
 
-import com.example.mercadinho.repository.model.ProductEntity;
+import com.example.mercadinho.domain.repository.model.ProductEntity;
 
 import java.util.List;
 

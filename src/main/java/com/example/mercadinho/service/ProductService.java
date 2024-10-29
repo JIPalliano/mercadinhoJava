@@ -1,8 +1,7 @@
 package com.example.mercadinho.service;
 
-import com.example.mercadinho.repository.UserRepository;
-import com.example.mercadinho.repository.model.ProductEntity;
-import com.example.mercadinho.repository.ProductRepository;
+import com.example.mercadinho.domain.repository.model.ProductEntity;
+import com.example.mercadinho.domain.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,6 @@ import java.util.List;
 public class ProductService implements ProductFacade{
 
     final ProductRepository repository;
-    final UserRepository userRepository;
 
     @Override
     public ProductEntity createProduct(ProductEntity request){

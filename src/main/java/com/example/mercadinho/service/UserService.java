@@ -1,43 +1,43 @@
 package com.example.mercadinho.service;
 
-import com.example.mercadinho.repository.UserRepository;
-import com.example.mercadinho.repository.model.UserEntity;
-import com.example.mercadinho.security.UserAuthenticated;
-import com.example.mercadinho.service.cookies.CookieService;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.example.mercadinho.controller.request.LoginRequest;
+import com.example.mercadinho.controller.request.UserRequest;
+import com.example.mercadinho.controller.response.LoginResponse;
+import com.example.mercadinho.controller.response.UserResponse;
+import com.example.mercadinho.domain.repository.UserRepository;
+import com.example.mercadinho.domain.repository.model.UserEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class UserService implements UserFacade, UserDetailsService {
+@RequiredArgsConstructor
+public class UserService{
 
-    final UserRepository userRepository;
-    CookieService cookie;
+    private final UserRepository userRepository;
+    private final PasswordEncryption passwordEncoder;
+    private final TokenService tokenService;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserResponse registerUser(UserRequest request){
+        return userRepository.save(UserEntity.builder()
+                .username(request.username())
+                .password(passwordEncoder.encryptPassword(request.password()))
+                .build()).fromEntity();
     }
 
-    @Override
-    public UserEntity createUser(UserEntity request){
-        return userRepository.save(request);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-//        if ("admin".equalsIgnoreCase(username)) {
-//            return userRepository.findByNameAndPassword(username, "$2a$10$muh0PcyvZTvha2xYJSpT9eErpjxk6UK1D.KUlvZHNbKrZ7ZOurERS").map(UserAuthenticated::new)
-//                .orElseThrow(
-//                        () -> new UsernameNotFoundException("User Not Found with username: " + username));
-//        } else {
-//            // Throw this exception if the user was not found
-//            throw new UsernameNotFoundException("User not found");
-//        }
-        return userRepository.findByName(name)
-                .map(UserAuthenticated::new)
-                .orElseThrow(
-                        () -> new UsernameNotFoundException("User Not Found with username: " + name));
+    public LoginResponse loginUser(LoginRequest request){
+        return userRepository.findByUsername(request.username()).map(userEntity -> {
+            if(passwordEncoder.matches(request.password(), userEntity.getPassword())){
+                return LoginResponse.builder()
+                        .username(userEntity.getUsername())
+                        .role(userEntity.getRole())
+                        .token(tokenService.generateToken(userEntity))
+                        .build();
+            }else{
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username or password incorrect.");
+            }
+        }).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
     }
 
 }

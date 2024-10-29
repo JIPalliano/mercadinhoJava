@@ -1,7 +1,7 @@
 package com.example.mercadinho.service;
 
-import com.example.mercadinho.repository.model.ProductEntity;
-import com.example.mercadinho.repository.model.ShoppingCartEntity;
+import com.example.mercadinho.domain.repository.model.ProductEntity;
+import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
