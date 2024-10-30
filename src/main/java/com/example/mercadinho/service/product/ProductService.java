@@ -1,21 +1,25 @@
-package com.example.mercadinho.service;
+package com.example.mercadinho.service.product;
 
+import com.example.mercadinho.controller.request.ProductRequest;
 import com.example.mercadinho.domain.repository.model.ProductEntity;
 import com.example.mercadinho.domain.repository.ProductRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductService implements ProductFacade{
 
-    final ProductRepository repository;
+    private final ProductRepository repository;
 
     @Override
-    public ProductEntity createProduct(ProductEntity request){
-        return repository.save(request);
+    public ProductEntity createProduct(ProductRequest request){
+        return repository.save(ProductEntity.builder()
+                .name(request.name())
+                .price(request.price())
+                .build());
     }
 
     @Override

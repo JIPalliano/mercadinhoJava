@@ -8,13 +8,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Builder
-@Document(collection = "shopping-cart")
+@Document(collection = "shoppingCartEntity")
 public record ShoppingCartEntity(
         @Id
         String id,
+        List<ProductEntity> products,
         @Indexed(unique = true)
         String userId,
-        List<ProductEntity> products,
         String date
 ) {
 }

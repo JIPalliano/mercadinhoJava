@@ -1,7 +1,8 @@
 package com.example.mercadinho.controller;
 
 
-import com.example.mercadinho.service.ProductFacade;
+import com.example.mercadinho.controller.request.ProductRequest;
+import com.example.mercadinho.service.product.ProductFacade;
 import com.example.mercadinho.domain.repository.model.ProductEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class ProductController {
 
 
     @PostMapping
-    public ProductEntity createProduct(@RequestBody ProductEntity request) {
+    public ProductEntity createProduct(@RequestBody ProductRequest request) {
         return this.facade.createProduct(request);
     }
 

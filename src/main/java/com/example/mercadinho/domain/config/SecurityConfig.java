@@ -1,6 +1,7 @@
 package com.example.mercadinho.domain.config;
 
 
+import com.example.mercadinho.service.cookies.CookieInterceptor;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,16 +20,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-//@EnableMethodSecurity(jsr250Enabled = true)
-public class SecurityConfig {
+@EnableMethodSecurity(jsr250Enabled = true)
+public class SecurityConfig implements WebMvcConfigurer {
 
 
     private final SecurityFilter securityFilter;
+    private final CookieInterceptor cookieInterceptor;
 
 
     @Bean
@@ -39,8 +43,6 @@ public class SecurityConfig {
                         auth -> auth
                                 .requestMatchers(HttpMethod.POST, "/v1/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/v1/auth/register").permitAll()
-//                                .requestMatchers("/v1/merchandiser/**").permitAll()
-//                                .requestMatchers("/v1/shopping-cart/**").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -60,6 +62,12 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // Adiciona o interceptor para todas as requisições
+        registry.addInterceptor(cookieInterceptor).addPathPatterns("/**");
     }
 
 }
