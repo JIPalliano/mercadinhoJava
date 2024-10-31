@@ -14,6 +14,10 @@ public interface ShoppingCartFacade {
 
     ShoppingCartEntity findShoppingCartAdd(String idProduct);
 
+    void deleteShoppingCart(String idShoppingCart);
+
+    void deleteProductShoppingCart(String idProduct);
+
     List<ShoppingCartEntity> findAll();
 
     ShoppingCartEntity findShoppingCartCookie();

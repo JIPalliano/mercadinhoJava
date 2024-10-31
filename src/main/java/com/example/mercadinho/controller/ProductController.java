@@ -4,6 +4,7 @@ package com.example.mercadinho.controller;
 import com.example.mercadinho.controller.request.ProductRequest;
 import com.example.mercadinho.service.product.ProductFacade;
 import com.example.mercadinho.domain.repository.model.ProductEntity;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +24,13 @@ public class ProductController {
     }
 
     @PutMapping(path="{id-product}" )
+    @RolesAllowed("ADMIN")
     public ProductEntity updateProduct(@PathVariable("id-product") String idProduct, @RequestBody ProductRequest request){
         return this.facade.updateProduct(idProduct, request);
     }
 
     @DeleteMapping(path="{id-product}")
+    @RolesAllowed("ADMIN")
     public void deleteProduct(@PathVariable("id-product") String idProduct){
         this.facade.deleteProduct(idProduct);
     }

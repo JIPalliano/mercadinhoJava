@@ -44,6 +44,18 @@ public class ShoppingCartService implements ShoppingCartFacade{
     }
 
     @Override
+    public void deleteShoppingCart(String idShoppingCart){
+        repository.deleteById(idShoppingCart);
+    }
+
+    @Override
+    public void deleteProductShoppingCart(String idProduct){
+        repository.findByUserId(Optional.ofNullable(UserService.getCurrentUser())
+                .map(UserEntity::getId).orElseThrow()).map(cart ->
+            cart.products().remove(idProduct)).orElseThrow();
+    }
+
+    @Override
     public ShoppingCartEntity findShoppingCartByUser(){
         return repository.findByUserId(Objects.requireNonNull(UserService.getCurrentUser()).getId()).orElseThrow();
     }

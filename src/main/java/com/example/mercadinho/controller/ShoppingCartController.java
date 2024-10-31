@@ -22,12 +22,22 @@ public class ShoppingCartController {
 
     @PostMapping(path="{id-product}")
     public ShoppingCartEntity createShoppingCart(@PathVariable("id-product") String idProduct, ShoppingCartRequest request) {
-        return facade.createShoppingCart(idProduct, request);
+        return this.facade.createShoppingCart(idProduct, request);
     }
 
     @PutMapping(path="{id-product}")
     public ShoppingCartEntity findShoppingCartAdd(@PathVariable("id-product") String idProduct) {
         return this.facade.findShoppingCartAdd(idProduct);
+    }
+
+    @DeleteMapping(path="{id-product}")
+    public void deleteProductShoppingCart(@PathVariable("id-product") String idProduct) {
+        this.facade.deleteShoppingCart(idProduct);
+    }
+
+    @DeleteMapping(path="{id-shopping-cart}")
+    public void deleteShoppingCart(@PathVariable("id-shopping-cart") String idShoppingCart) {
+        this.facade.deleteShoppingCart(idShoppingCart);
     }
 
     @GetMapping(path="user-shopping-cart")
