@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class ResourceExceptionHandler {
@@ -35,6 +36,15 @@ public class ResourceExceptionHandler {
             Exception ex) {
         Map<String, String> error = new HashMap<>();
         error.put(ex.getLocalizedMessage(), ex.getMessage());
+        return error;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({NoSuchElementException.class})
+    public Map<String, String> handleExceptionNotFound(
+            NoSuchElementException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put(ex.getLocalizedMessage(), "Value not found.");
         return error;
     }
 }

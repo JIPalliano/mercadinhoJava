@@ -20,17 +20,14 @@ public class ShoppingCartController {
 
     private final ShoppingCartFacade facade;
 
-    @PostMapping(path="{idProduct}")
-    public ShoppingCartEntity createShoppingCart(@PathVariable("idProduct") String idProduct, ShoppingCartRequest request) {
+    @PostMapping(path="{id-product}")
+    public ShoppingCartEntity createShoppingCart(@PathVariable("id-product") String idProduct, ShoppingCartRequest request) {
         return facade.createShoppingCart(idProduct, request);
     }
 
-    @PutMapping(path="{id-product}/{id-shopping-cart}")
-    public ShoppingCartEntity findShoppingCartAdd(@PathVariable("id-product") String idProduct,
-                                                  @PathVariable("id-shopping-cart") String idShoppingCart,
-                                                  HttpServletResponse response,
-                                                  ProductEntity productResponse) {
-        return this.facade.findShoppingCartAdd(idProduct, idShoppingCart, response, productResponse);
+    @PutMapping(path="{id-product}")
+    public ShoppingCartEntity findShoppingCartAdd(@PathVariable("id-product") String idProduct) {
+        return this.facade.findShoppingCartAdd(idProduct);
     }
 
     @GetMapping(path="user-shopping-cart")

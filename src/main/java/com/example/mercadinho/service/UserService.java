@@ -6,6 +6,7 @@ import com.example.mercadinho.controller.response.LoginResponse;
 import com.example.mercadinho.controller.response.UserResponse;
 import com.example.mercadinho.domain.repository.UserRepository;
 import com.example.mercadinho.domain.repository.model.UserEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,15 @@ public class UserService{
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username or password incorrect.");
             }
         }).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
+    }
+
+    public static UserEntity getCurrentUser(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!(principal instanceof UserEntity)){
+            return null;
+        }else{
+            return (UserEntity) principal;
+        }
     }
 
 }

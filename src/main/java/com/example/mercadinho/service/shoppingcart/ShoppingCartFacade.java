@@ -12,7 +12,7 @@ public interface ShoppingCartFacade {
 
     ShoppingCartEntity findShoppingCartByUser();
 
-    ShoppingCartEntity findShoppingCartAdd(String idProduct, String idShoppingCart, HttpServletResponse response, ProductEntity productResponse);
+    ShoppingCartEntity findShoppingCartAdd(String idProduct);
 
     List<ShoppingCartEntity> findAll();
 

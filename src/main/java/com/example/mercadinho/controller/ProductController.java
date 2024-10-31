@@ -22,9 +22,19 @@ public class ProductController {
         return this.facade.createProduct(request);
     }
 
-    @GetMapping(path="/{id}")
-    public ProductEntity findById(@PathVariable("id") ProductEntity id) {
-        return this.facade.findById(id);
+    @PutMapping(path="{id-product}" )
+    public ProductEntity updateProduct(@PathVariable("id-product") String idProduct, @RequestBody ProductRequest request){
+        return this.facade.updateProduct(idProduct, request);
+    }
+
+    @DeleteMapping(path="{id-product}")
+    public void deleteProduct(@PathVariable("id-product") String idProduct){
+        this.facade.deleteProduct(idProduct);
+    }
+
+    @GetMapping(path="{id-product}")
+    public ProductEntity findById(@PathVariable("id-product") ProductEntity idProduct) {
+        return this.facade.findById(idProduct);
     }
 
     @GetMapping(path="/")
