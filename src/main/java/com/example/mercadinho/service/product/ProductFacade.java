@@ -17,6 +17,8 @@ public interface ProductFacade{
 
     void deleteProduct(String idProduct);
 
+    void deleteProductShoppingCart(String idProduct);
+
     ProductEntity findById(ProductEntity id);
 
     List<ProductEntity> findAll();

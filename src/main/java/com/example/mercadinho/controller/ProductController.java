@@ -15,24 +15,11 @@ import java.util.List;
 @RequestMapping(path="/v1/merchandiser")
 public class ProductController {
 
-    final ProductFacade facade;
-
-
-    @PostMapping
-    public ProductEntity createProduct(@RequestBody ProductRequest request) {
-        return this.facade.createProduct(request);
-    }
-
-    @PutMapping(path="{id-product}" )
-    @RolesAllowed("ADMIN")
-    public ProductEntity updateProduct(@PathVariable("id-product") String idProduct, @RequestBody ProductRequest request){
-        return this.facade.updateProduct(idProduct, request);
-    }
+    private final ProductFacade facade;
 
     @DeleteMapping(path="{id-product}")
-    @RolesAllowed("ADMIN")
-    public void deleteProduct(@PathVariable("id-product") String idProduct){
-        this.facade.deleteProduct(idProduct);
+    public void deleteProductShoppingCart(@PathVariable("id-product") String idProduct) {
+        this.facade.deleteProductShoppingCart(idProduct);
     }
 
     @GetMapping(path="{id-product}")

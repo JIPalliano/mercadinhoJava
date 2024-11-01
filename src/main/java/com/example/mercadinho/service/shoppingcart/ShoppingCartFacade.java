@@ -16,8 +16,6 @@ public interface ShoppingCartFacade {
 
     void deleteShoppingCart(String idShoppingCart);
 
-    void deleteProductShoppingCart(String idProduct);
-
     List<ShoppingCartEntity> findAll();
 
     ShoppingCartEntity findShoppingCartCookie();

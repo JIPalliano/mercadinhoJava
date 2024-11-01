@@ -21,12 +21,12 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ShoppingCartService implements ShoppingCartFacade{
 
-    private final ShoppingCartRepository repository;
+    private final ShoppingCartRepository shoppingCartRepository;
     private final ProductRepository productRepository;
 
     @Override
     public ShoppingCartEntity createShoppingCart(String idProduct, ShoppingCartRequest request) {
-        return repository.save(ShoppingCartEntity.builder()
+        return shoppingCartRepository.save(ShoppingCartEntity.builder()
                 .products(Stream.of(idProduct).map(productRepository::findById)
                         .flatMap(Optional::stream).collect(Collectors.toList()))
                 .userId(Optional.ofNullable(UserService.getCurrentUser()).map(UserEntity::getId).orElseThrow())
@@ -36,7 +36,7 @@ public class ShoppingCartService implements ShoppingCartFacade{
 
     @Override
     public ShoppingCartEntity findShoppingCartAdd(String idProduct) {
-        return repository.save(repository.findByUserId(Optional.ofNullable(UserService.getCurrentUser())
+        return shoppingCartRepository.save(shoppingCartRepository.findByUserId(Optional.ofNullable(UserService.getCurrentUser())
                 .map(UserEntity::getId).orElseThrow()).map(cart ->{
             productRepository.findById(idProduct).ifPresent(cart.products()::add);
             return cart;
@@ -45,24 +45,17 @@ public class ShoppingCartService implements ShoppingCartFacade{
 
     @Override
     public void deleteShoppingCart(String idShoppingCart){
-        repository.deleteById(idShoppingCart);
-    }
-
-    @Override
-    public void deleteProductShoppingCart(String idProduct){
-        repository.findByUserId(Optional.ofNullable(UserService.getCurrentUser())
-                .map(UserEntity::getId).orElseThrow()).map(cart ->
-            cart.products().remove(idProduct)).orElseThrow();
+        shoppingCartRepository.deleteById(idShoppingCart);
     }
 
     @Override
     public ShoppingCartEntity findShoppingCartByUser(){
-        return repository.findByUserId(Objects.requireNonNull(UserService.getCurrentUser()).getId()).orElseThrow();
+        return shoppingCartRepository.findByUserId(Objects.requireNonNull(UserService.getCurrentUser()).getId()).orElseThrow();
     }
 
     @Override
     public List<ShoppingCartEntity> findAll() {
-        return this.repository.findAll();
+        return this.shoppingCartRepository.findAll();
     }
 
     @Override

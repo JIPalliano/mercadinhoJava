@@ -2,11 +2,9 @@ package com.example.mercadinho.controller;
 
 
 import com.example.mercadinho.controller.request.ShoppingCartRequest;
-import com.example.mercadinho.domain.repository.model.ProductEntity;
 import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
 import com.example.mercadinho.service.shoppingcart.ShoppingCartFacade;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +28,6 @@ public class ShoppingCartController {
         return this.facade.findShoppingCartAdd(idProduct);
     }
 
-    @DeleteMapping(path="{id-product}")
-    public void deleteProductShoppingCart(@PathVariable("id-product") String idProduct) {
-        this.facade.deleteShoppingCart(idProduct);
-    }
-
     @DeleteMapping(path="{id-shopping-cart}")
     public void deleteShoppingCart(@PathVariable("id-shopping-cart") String idShoppingCart) {
         this.facade.deleteShoppingCart(idShoppingCart);
@@ -44,12 +37,6 @@ public class ShoppingCartController {
     @RolesAllowed({"USER","ADMIN"})
     public ShoppingCartEntity findShoppingCartByUser(){
         return this.facade.findShoppingCartByUser();
-    }
-
-    @GetMapping
-    @RolesAllowed("ADMIN")
-    public List<ShoppingCartEntity> findAll() {
-        return this.facade.findAll();
     }
 
     @GetMapping(path="/cookie")
