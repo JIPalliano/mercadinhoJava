@@ -1,6 +1,7 @@
 package com.example.mercadinho.controller;
 
 
+import com.example.mercadinho.controller.request.ProductRequest;
 import com.example.mercadinho.controller.request.ShoppingCartRequest;
 import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
 import com.example.mercadinho.service.shoppingcart.ShoppingCartFacade;
@@ -8,7 +9,6 @@ import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,5 +43,10 @@ public class ShoppingCartController {
     public ShoppingCartEntity findShoppingCartCookie() {
         return this.facade.findShoppingCartCookie();
     }
+
+//    @PatchMapping(path = "/item")
+//    public ShoppingCartEntity removeItemQuantity(String shoppingCartId, ProductRequest productRequest) {
+//
+//    }
 
 }

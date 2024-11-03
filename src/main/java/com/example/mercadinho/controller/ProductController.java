@@ -1,10 +1,10 @@
 package com.example.mercadinho.controller;
 
 
+
 import com.example.mercadinho.controller.request.ProductRequest;
 import com.example.mercadinho.service.product.ProductFacade;
 import com.example.mercadinho.domain.repository.model.ProductEntity;
-import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +27,12 @@ public class ProductController {
         return this.facade.findById(idProduct);
     }
 
-    @GetMapping(path="/")
+    @PatchMapping
+    public void removeQuantityProductShoppingCart(@RequestBody ProductRequest request){ //id quantity=2
+        this.facade.removeQuantityProductShoppingCart(request);
+    }
+
+    @GetMapping
     public List<ProductEntity> findAll() {
         return this.facade.findAll();
     }

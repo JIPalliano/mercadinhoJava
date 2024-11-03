@@ -3,14 +3,11 @@ package com.example.mercadinho.controller.admin;
 
 import com.example.mercadinho.controller.request.ProductRequest;
 import com.example.mercadinho.domain.repository.model.ProductEntity;
-import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
 import com.example.mercadinho.service.product.ProductFacade;
-import com.example.mercadinho.service.shoppingcart.ShoppingCartFacade;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @AllArgsConstructor

@@ -4,7 +4,9 @@ import lombok.Builder;
 
 @Builder
 public record ProductRequest(
+        String id,
         String name,
-        Float price
+        Float price,
+        Long quantity
 ) {
 }

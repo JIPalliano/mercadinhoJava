@@ -2,7 +2,6 @@ package com.example.mercadinho.domain.config;
 
 
 import com.example.mercadinho.service.cookies.CookieInterceptor;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

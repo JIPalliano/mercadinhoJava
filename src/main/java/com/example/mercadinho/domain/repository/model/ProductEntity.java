@@ -13,6 +13,7 @@ public record ProductEntity(
         @Id
         String id,
         String name,
-        Float price
+        Float price,
+        Long quantity
 ) {
 }
