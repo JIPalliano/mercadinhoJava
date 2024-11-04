@@ -16,6 +16,8 @@ public interface ProductFacade{
 
     void removeQuantityProductShoppingCart(ProductRequest request);
 
+    void addQuantityProductShoppingCart(ProductRequest request);
+
     ProductEntity findById(ProductEntity id);
 
     List<ProductEntity> findAll();

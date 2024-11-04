@@ -27,9 +27,14 @@ public class ProductController {
         return this.facade.findById(idProduct);
     }
 
-    @PatchMapping
+    @PatchMapping(path="remove")
     public void removeQuantityProductShoppingCart(@RequestBody ProductRequest request){ //id quantity=2
         this.facade.removeQuantityProductShoppingCart(request);
+    }
+
+    @PatchMapping(path="add")
+    public void addQuantityProductShoppingCart(@RequestBody ProductRequest request){ //id quantity=2
+        this.facade.addQuantityProductShoppingCart(request);
     }
 
     @GetMapping

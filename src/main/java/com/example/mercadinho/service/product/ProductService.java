@@ -50,22 +50,6 @@ public class ProductService implements ProductFacade{
 
     @Override
     public void removeQuantityProductShoppingCart(ProductRequest request) {
-
-
-        shoppingCartRepository.findByUserId(Optional.ofNullable(UserService.getCurrentUser()).map(UserEntity::getId).orElseThrow()).ifPresent(cart ->{
-            var cartProducts = cart.products().stream()
-                    .filter(product -> product.id().equals(request.id()))
-                    .toList();
-
-            if (CollectionUtils.isEmpty(cartProducts) || cartProducts.size() < request.quantity()) throw new RuntimeException();
-        });
-
-        // verificar a quantidade da lista de produtos dentro do carrinho com id requisitado
-
-        // subtrair o valor da lista pela quantidade requisitada
-        //tenho que alterar essa configurações
-
-
         shoppingCartRepository.findByUserId(Optional.ofNullable(UserService.getCurrentUser())
                 .map(UserEntity::getId)
                 .orElseThrow()).ifPresent(cart -> productRepository.findById(request.id()).ifPresent(product -> {
@@ -74,21 +58,32 @@ public class ProductService implements ProductFacade{
                         Optional<ProductEntity> findProduct = cart.products().stream().filter(p->p.id().equals(request.id())).findFirst();
                         ProductEntity newProduct = findProduct.orElse(null);
                         int index = cart.products().indexOf(newProduct);
-                        cart.products().set(index, ProductEntity.builder().id(product.id()).name(request.name()).quantity(request.quantity()).build());
+                        cart.products().set(index, ProductEntity.builder().id(product.id()).name(product.name()).price(product.price()).quantity(newQuantity).build());
                         shoppingCartRepository.save(cart);
                     } else {
                         shoppingCartRepository.save(shoppingCartRepository.findByUserId(Optional.ofNullable(UserService.getCurrentUser())
                                 .map(UserEntity::getId).orElseThrow()).map(newCart->{
                             productRepository.findById(product.id()).ifPresent(newCart.products()::remove);
+                            if(newCart.products().isEmpty()){shoppingCartRepository.deleteById(newCart.id());}
                             return newCart;
                         }).orElseThrow(RuntimeException::new));
                     }
                 }));
-//        shoppingCartRepository.save(shoppingCartRepository.findByUserId(Optional.ofNullable(UserService.getCurrentUser())
-//                .map(UserEntity::getId).orElseThrow()).map(cart ->{
-//            productRepository.findById(idProduct).ifPresent(cart.products()::remove);
-//            return cart;
-//        }).orElseThrow(RuntimeException::new));
+    }
+
+
+    @Override
+    public void addQuantityProductShoppingCart(ProductRequest request) {
+        shoppingCartRepository.findByUserId(Optional.ofNullable(UserService.getCurrentUser())
+                .map(UserEntity::getId)
+                .orElseThrow()).ifPresent(cart -> productRepository.findById(request.id()).ifPresent(product -> {
+            Long newQuantity = product.quantity() + request.quantity();
+            Optional<ProductEntity> findProduct = cart.products().stream().filter(p->p.id().equals(request.id())).findFirst();
+            ProductEntity newProduct = findProduct.orElse(null);
+            int index = cart.products().indexOf(newProduct);
+            cart.products().set(index, ProductEntity.builder().id(product.id()).name(product.name()).price(product.price()).quantity(newQuantity).build());
+            shoppingCartRepository.save(cart);
+        }));
     }
 
     @Override
