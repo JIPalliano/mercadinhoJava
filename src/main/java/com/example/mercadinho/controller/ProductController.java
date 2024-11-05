@@ -17,25 +17,25 @@ public class ProductController {
 
     private final ProductFacade facade;
 
-    @DeleteMapping(path="{id-product}")
-    public void deleteProductShoppingCart(@PathVariable("id-product") String idProduct) {
-        this.facade.deleteProductShoppingCart(idProduct);
-    }
+//    @DeleteMapping(path="{id-product}")
+//    public void deleteProductShoppingCart(@PathVariable("id-product") String idProduct) {
+//        this.facade.deleteProductShoppingCart(idProduct);
+//    }
 
     @GetMapping(path="{id-product}")
     public ProductEntity findById(@PathVariable("id-product") ProductEntity idProduct) {
         return this.facade.findById(idProduct);
     }
 
-    @PatchMapping(path="remove")
-    public void removeQuantityProductShoppingCart(@RequestBody ProductRequest request){ //id quantity=2
-        this.facade.removeQuantityProductShoppingCart(request);
-    }
+//    @PatchMapping(path="remove")
+//    public void removeQuantityProductShoppingCart(@RequestBody ProductRequest request){ //id quantity=2
+//        this.facade.removeQuantityProductShoppingCart(request);
+//    }
 
-    @PatchMapping(path="add")
-    public void addQuantityProductShoppingCart(@RequestBody ProductRequest request){ //id quantity=2
-        this.facade.addQuantityProductShoppingCart(request);
-    }
+//    @PatchMapping(path="add")
+//    public void addQuantityProductShoppingCart(@RequestBody ProductRequest request){ //id quantity=2
+//        this.facade.addQuantityProductShoppingCart(request);
+//    }
 
     @GetMapping
     public List<ProductEntity> findAll() {

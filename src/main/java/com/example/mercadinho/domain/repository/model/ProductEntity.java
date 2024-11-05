@@ -5,6 +5,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
+
 
 @Builder
 
@@ -13,7 +15,7 @@ public record ProductEntity(
         @Id
         String id,
         String name,
-        Float price,
-        Long quantity
+        BigDecimal price,
+        Integer quantity
 ) {
 }

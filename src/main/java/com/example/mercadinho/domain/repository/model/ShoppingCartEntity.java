@@ -1,6 +1,9 @@
 package com.example.mercadinho.domain.repository.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -8,13 +11,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Document(collection = "shoppingCartEntity")
-public record ShoppingCartEntity(
+public class ShoppingCartEntity {
         @Id
-        String id,
-        List<ProductEntity> products,
+        private String id;
+        private List<Product> products;
         @Indexed(unique = true)
-        String userId,
-        String date
-) {
+        private String userId;
+        private String date;
+        
 }
+

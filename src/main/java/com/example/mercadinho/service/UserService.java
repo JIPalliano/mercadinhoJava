@@ -45,11 +45,7 @@ public class UserService{
 
     public static UserEntity getCurrentUser(){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!(principal instanceof UserEntity)){
-            return null;
-        }else{
-            return (UserEntity) principal;
-        }
+        return (UserEntity) principal;
     }
 
 }

@@ -19,30 +19,30 @@ public class ShoppingCartController {
     private final ShoppingCartFacade facade;
 
     @PostMapping(path="{id-product}")
-    public ShoppingCartEntity createShoppingCart(@PathVariable("id-product") String idProduct, ShoppingCartRequest request) {
-        return this.facade.createShoppingCart(idProduct, request);
+    public ShoppingCartEntity create(@PathVariable("id-product") String idProduct, @RequestParam Integer quantity) {
+        return this.facade.create(idProduct, quantity);
     }
 
     @PutMapping(path="{id-product}")
-    public ShoppingCartEntity findShoppingCartAdd(@PathVariable("id-product") String idProduct) {
-        return this.facade.findShoppingCartAdd(idProduct);
+    public ShoppingCartEntity addProduct(@PathVariable("id-product") String idProduct, @RequestParam Integer quantity) {
+        return this.facade.addProduct(idProduct, quantity);
     }
 
     @DeleteMapping(path="{id-shopping-cart}")
-    public void deleteShoppingCart(@PathVariable("id-shopping-cart") String idShoppingCart) {
-        this.facade.deleteShoppingCart(idShoppingCart);
+    public void delete(@PathVariable("id-shopping-cart") String idShoppingCart) {
+        this.facade.delete(idShoppingCart);
     }
 
     @GetMapping(path="user-shopping-cart")
     @RolesAllowed({"USER","ADMIN"})
-    public ShoppingCartEntity findShoppingCartByUser(){
-        return this.facade.findShoppingCartByUser();
+    public ShoppingCartEntity find(){
+        return this.facade.find();
     }
 
-    @GetMapping(path="/cookie")
-    public ShoppingCartEntity findShoppingCartCookie() {
-        return this.facade.findShoppingCartCookie();
-    }
+//    @GetMapping(path="/cookie")
+//    public ShoppingCartEntity findShoppingCartCookie() {
+//        return this.facade.findShoppingCartCookie();
+//    }
 
 //    @PatchMapping(path = "/item")
 //    public ShoppingCartEntity removeItemQuantity(String shoppingCartId, ProductRequest productRequest) {

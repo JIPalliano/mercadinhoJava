@@ -6,16 +6,16 @@ import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
 import java.util.List;
 
 public interface ShoppingCartFacade {
-    ShoppingCartEntity createShoppingCart(String idProduct, ShoppingCartRequest request);
+    ShoppingCartEntity create(String idProduct, Integer quantity);
 
-    ShoppingCartEntity findShoppingCartByUser();
+    ShoppingCartEntity find();
 
-    ShoppingCartEntity findShoppingCartAdd(String idProduct);
+    ShoppingCartEntity addProduct(String idProduct, Integer quantity);
 
-    void deleteShoppingCart(String idShoppingCart);
+    void delete(String idShoppingCart);
 
     List<ShoppingCartEntity> findAll();
 
-    ShoppingCartEntity findShoppingCartCookie();
+//    ShoppingCartEntity findShoppingCartCookie();
 
 }

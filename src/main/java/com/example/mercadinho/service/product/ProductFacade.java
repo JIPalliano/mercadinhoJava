@@ -12,11 +12,11 @@ public interface ProductFacade{
 
     void deleteProduct(String idProduct);
 
-    void deleteProductShoppingCart(String idProduct);
+//    void deleteProductShoppingCart(String idProduct);
 
-    void removeQuantityProductShoppingCart(ProductRequest request);
+//    void removeQuantityProductShoppingCart(ProductRequest request);
 
-    void addQuantityProductShoppingCart(ProductRequest request);
+//    void addQuantityProductShoppingCart(ProductRequest request);
 
     ProductEntity findById(ProductEntity id);
 
