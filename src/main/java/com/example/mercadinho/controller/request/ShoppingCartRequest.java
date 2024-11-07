@@ -1,6 +1,6 @@
 package com.example.mercadinho.controller.request;
 
-import com.example.mercadinho.domain.repository.model.ProductEntity;
+import com.example.mercadinho.domain.repository.model.entity.ProductEntity;
 import lombok.Builder;
 
 import java.util.List;

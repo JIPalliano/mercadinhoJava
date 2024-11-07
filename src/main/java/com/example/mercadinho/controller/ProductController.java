@@ -2,9 +2,8 @@ package com.example.mercadinho.controller;
 
 
 
-import com.example.mercadinho.controller.request.ProductRequest;
 import com.example.mercadinho.service.product.ProductFacade;
-import com.example.mercadinho.domain.repository.model.ProductEntity;
+import com.example.mercadinho.domain.repository.model.entity.ProductEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,16 +25,6 @@ public class ProductController {
     public ProductEntity findById(@PathVariable("id-product") ProductEntity idProduct) {
         return this.facade.findById(idProduct);
     }
-
-//    @PatchMapping(path="remove")
-//    public void removeQuantityProductShoppingCart(@RequestBody ProductRequest request){ //id quantity=2
-//        this.facade.removeQuantityProductShoppingCart(request);
-//    }
-
-//    @PatchMapping(path="add")
-//    public void addQuantityProductShoppingCart(@RequestBody ProductRequest request){ //id quantity=2
-//        this.facade.addQuantityProductShoppingCart(request);
-//    }
 
     @GetMapping
     public List<ProductEntity> findAll() {

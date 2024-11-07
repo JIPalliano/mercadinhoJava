@@ -1,4 +1,4 @@
-package com.example.mercadinho.domain.repository.model;
+package com.example.mercadinho.domain.repository.model.entity;
 
 import com.example.mercadinho.controller.response.UserResponse;
 import lombok.AllArgsConstructor;

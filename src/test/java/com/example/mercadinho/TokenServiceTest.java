@@ -1,9 +1,7 @@
 package com.example.mercadinho;
 
 
-import com.example.mercadinho.domain.repository.model.UserEntity;
 import com.example.mercadinho.service.TokenService;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

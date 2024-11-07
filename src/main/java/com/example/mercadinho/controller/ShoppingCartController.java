@@ -1,9 +1,8 @@
 package com.example.mercadinho.controller;
 
 
-import com.example.mercadinho.controller.request.ProductRequest;
-import com.example.mercadinho.controller.request.ShoppingCartRequest;
-import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
+import com.example.mercadinho.controller.response.ShoppingCartResponse;
+import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import com.example.mercadinho.service.shoppingcart.ShoppingCartFacade;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,7 @@ public class ShoppingCartController {
 
     @GetMapping(path="user-shopping-cart")
     @RolesAllowed({"USER","ADMIN"})
-    public ShoppingCartEntity find(){
+    public ShoppingCartResponse find(){
         return this.facade.find();
     }
 

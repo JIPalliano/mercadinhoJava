@@ -1,6 +1,6 @@
 package com.example.mercadinho.service;
 
-import com.example.mercadinho.domain.repository.model.UserEntity;
+import com.example.mercadinho.domain.repository.model.entity.UserEntity;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;

@@ -1,5 +1,6 @@
-package com.example.mercadinho.domain.repository.model;
+package com.example.mercadinho.domain.repository.model.entity;
 
+import com.example.mercadinho.domain.repository.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

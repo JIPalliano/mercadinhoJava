@@ -1,7 +1,6 @@
-package com.example.mercadinho.domain.repository.model;
+package com.example.mercadinho.domain.repository.model.entity;
 
 import lombok.Builder;
-import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

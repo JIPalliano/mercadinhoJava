@@ -1,36 +1,38 @@
 package com.example.mercadinho.service.shoppingcart;
 
+import com.example.mercadinho.controller.response.ShoppingCartResponse;
 import com.example.mercadinho.domain.repository.ProductRepository;
 import com.example.mercadinho.domain.repository.ShoppingCartRepository;
 import com.example.mercadinho.domain.repository.model.Product;
-import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
+import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import com.example.mercadinho.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class ShoppingCartService implements ShoppingCartFacade{
+public class ShoppingCartService implements ShoppingCartFacade {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductRepository productRepository;
-    private final UserService userService;
 
     @Override
     public ShoppingCartEntity create(String idProduct, Integer quantity) {
         return productRepository.findById(idProduct).map(product -> shoppingCartRepository.save(ShoppingCartEntity.builder()
                 .products(List.of(Product.builder()
-                                .id(idProduct)
-                                .quantity(quantity)
+                        .id(idProduct)
+                        .name(product.name())
+                        .price(product.price())
+                        .quantity(quantity)
                         .build()))
                 .userId(UserService.getCurrentUser().getId())
                 .date(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(LocalDateTime.now()))
-                .build())).orElseThrow(()-> new RuntimeException("Produto não encontrado!!"));
+                .build())).orElseThrow(() -> new RuntimeException("Product not found!!"));
     }
 
     @Override
@@ -58,26 +60,50 @@ public class ShoppingCartService implements ShoppingCartFacade{
                         },
                         () -> {
                             if (quantity > 0) {
-                                products.add(Product.builder()
-                                        .id(idProduct)
-                                        .quantity(quantity)
-                                        .build());
+                                products.add(findProduct(idProduct, quantity));
                             }
                         }
                 );
     }
 
+    private Product findProduct( String idProduct, Integer quantity) {
+        return productRepository.findById(idProduct).map(productEntity -> Product.builder()
+                .id(idProduct)
+                .name(productEntity.name())
+                .price(productEntity.price())
+                .quantity(quantity)
+                .build()).orElseThrow(() -> new RuntimeException("Product not found!"));
+    }
+
 
     @Override
-    public void delete(String idShoppingCart){
+    public void delete(String idShoppingCart) {
         shoppingCartRepository.deleteById(idShoppingCart);
     }
 
     @Override
-    public ShoppingCartEntity find(){
-        return shoppingCartRepository.findByUserId(Objects.requireNonNull(UserService.getCurrentUser()).getId()).orElseThrow();
-    }
+    public ShoppingCartResponse find() {
+        return shoppingCartRepository.findByUserId(UserService.getCurrentUser().getId())
+                .map(shoppingCartEntity -> {
+                    int totalQuantity = shoppingCartEntity.getProducts().stream()
+                            .mapToInt(Product::getQuantity)
+                            .sum();
 
+                    BigDecimal totalPrice = shoppingCartEntity.getProducts().stream()
+                            .map(product -> product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity())))
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                    return ShoppingCartResponse.builder()
+                            .id(shoppingCartEntity.getId())
+                            .products(shoppingCartEntity.getProducts())
+                            .totalPrice(totalPrice)
+                            .quantity(totalQuantity)
+                            .userId(shoppingCartEntity.getUserId())
+                            .date(shoppingCartEntity.getDate())
+                            .build();
+                })
+                .orElseThrow();
+    }
     @Override
     public List<ShoppingCartEntity> findAll() {
         return this.shoppingCartRepository.findAll();

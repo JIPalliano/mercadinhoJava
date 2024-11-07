@@ -1,7 +1,7 @@
 package com.example.mercadinho.controller.admin;
 
 
-import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
+import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import com.example.mercadinho.service.shoppingcart.ShoppingCartFacade;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;

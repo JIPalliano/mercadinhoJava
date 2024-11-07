@@ -1,6 +1,6 @@
 package com.example.mercadinho.domain.repository;
 
-import com.example.mercadinho.domain.repository.model.ShoppingCartEntity;
+import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

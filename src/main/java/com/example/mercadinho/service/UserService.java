@@ -5,7 +5,7 @@ import com.example.mercadinho.controller.request.UserRequest;
 import com.example.mercadinho.controller.response.LoginResponse;
 import com.example.mercadinho.controller.response.UserResponse;
 import com.example.mercadinho.domain.repository.UserRepository;
-import com.example.mercadinho.domain.repository.model.UserEntity;
+import com.example.mercadinho.domain.repository.model.entity.UserEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
