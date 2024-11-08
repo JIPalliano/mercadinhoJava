@@ -6,7 +6,9 @@ import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import com.example.mercadinho.service.shoppingcart.ShoppingCartFacade;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
 
 
 @RestController
@@ -37,6 +39,12 @@ public class ShoppingCartController {
     public ShoppingCartResponse find(){
         return this.facade.find();
     }
+
+//    @GetMapping(path="api")
+//    @RolesAllowed({"USER","ADMIN"})
+//    public Object getExampleData(@RequestBody AddressRequest address){
+//        return this.facade.getExampleData(address);
+//    }
 
 //    @GetMapping(path="/cookie")
 //    public ShoppingCartEntity findShoppingCartCookie() {
