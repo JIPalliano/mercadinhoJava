@@ -16,10 +16,11 @@ public class ApiTomtomService {
     @Value("${api.key.tomtom}")
     private String key;
     private final RestTemplate restTemplate;
+    private UrlApi urlApi;
 
     public String getCoordnates(AddressRequest request) {
         //Map response = restTemplate.getForObject(UrlApi.GEOCODING_API.getGeocodingUrl(request.address()), Map.class);
-        Map<String, Object> response = restTemplate.getForObject(UrlApi.GEOCODING_API.getGeocodingUrl(request.address(), this.key), Map.class);
+        Map<String, Object> response = restTemplate.getForObject(urlApi.getGeocodingUrl(request.address(), this.key), Map.class);
         if (response != null) {
             // Acessamos a lista de resultados
             List<Map<String, Object>> results = (List<Map<String, Object>>) response.get("results");
