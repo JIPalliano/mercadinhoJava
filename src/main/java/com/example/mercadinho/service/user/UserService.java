@@ -1,4 +1,4 @@
-package com.example.mercadinho.service;
+package com.example.mercadinho.service.user;
 
 import com.example.mercadinho.controller.request.LoginRequest;
 import com.example.mercadinho.controller.request.UserRequest;

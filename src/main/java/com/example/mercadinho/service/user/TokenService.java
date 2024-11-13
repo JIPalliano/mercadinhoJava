@@ -1,4 +1,4 @@
-package com.example.mercadinho.service;
+package com.example.mercadinho.service.user;
 
 import com.example.mercadinho.domain.repository.model.entity.UserEntity;
 import com.nimbusds.jose.*;

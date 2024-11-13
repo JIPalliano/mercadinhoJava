@@ -1,4 +1,4 @@
-package com.example.mercadinho.controller;
+package com.example.mercadinho.controller.user;
 
 
 

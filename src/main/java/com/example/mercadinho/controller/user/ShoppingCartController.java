@@ -1,4 +1,4 @@
-package com.example.mercadinho.controller;
+package com.example.mercadinho.controller.user;
 
 
 import com.example.mercadinho.controller.response.ShoppingCartResponse;
@@ -6,7 +6,6 @@ import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import com.example.mercadinho.service.shoppingcart.ShoppingCartFacade;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 

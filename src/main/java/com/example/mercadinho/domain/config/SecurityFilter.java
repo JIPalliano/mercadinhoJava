@@ -1,7 +1,7 @@
 package com.example.mercadinho.domain.config;
 
 import com.example.mercadinho.domain.repository.UserRepository;
-import com.example.mercadinho.service.TokenService;
+import com.example.mercadinho.service.user.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

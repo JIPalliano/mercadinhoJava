@@ -3,10 +3,9 @@ package com.example.mercadinho.service.shoppingcart;
 import com.example.mercadinho.controller.response.ShoppingCartResponse;
 import com.example.mercadinho.domain.repository.ProductRepository;
 import com.example.mercadinho.domain.repository.ShoppingCartRepository;
-import com.example.mercadinho.domain.repository.model.Geocoding;
 import com.example.mercadinho.domain.repository.model.Product;
 import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
-import com.example.mercadinho.service.UserService;
+import com.example.mercadinho.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,8 +21,6 @@ public class ShoppingCartService implements ShoppingCartFacade {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductRepository productRepository;
-    private final RestTemplate restTemplate;
-    private Geocoding geocoding;
 
     @Override
     public ShoppingCartEntity create(String idProduct, Integer quantity) {
@@ -112,6 +109,8 @@ public class ShoppingCartService implements ShoppingCartFacade {
     public List<ShoppingCartEntity> findAll() {
         return this.shoppingCartRepository.findAll();
     }
+
+
 
 //    @Override
 //    public ShoppingCartEntity findShoppingCartCookie(){

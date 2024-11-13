@@ -1,10 +1,10 @@
-package com.example.mercadinho.controller;
+package com.example.mercadinho.controller.user;
 
 import com.example.mercadinho.controller.request.LoginRequest;
 import com.example.mercadinho.controller.request.UserRequest;
 import com.example.mercadinho.controller.response.LoginResponse;
 import com.example.mercadinho.controller.response.UserResponse;
-import com.example.mercadinho.service.UserService;
+import com.example.mercadinho.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

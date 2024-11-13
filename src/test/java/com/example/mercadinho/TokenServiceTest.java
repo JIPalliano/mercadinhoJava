@@ -1,7 +1,7 @@
 package com.example.mercadinho;
 
 
-import com.example.mercadinho.service.TokenService;
+import com.example.mercadinho.service.user.TokenService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
