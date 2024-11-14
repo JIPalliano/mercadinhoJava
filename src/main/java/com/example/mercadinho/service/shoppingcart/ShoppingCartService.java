@@ -5,6 +5,7 @@ import com.example.mercadinho.domain.repository.ProductRepository;
 import com.example.mercadinho.domain.repository.ShoppingCartRepository;
 import com.example.mercadinho.domain.repository.model.Product;
 import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
+import com.example.mercadinho.service.shipping.ShippingService;
 import com.example.mercadinho.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class ShoppingCartService implements ShoppingCartFacade {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductRepository productRepository;
+    private final ShippingService shippingService;
 
     @Override
     public ShoppingCartEntity create(String idProduct, Integer quantity) {

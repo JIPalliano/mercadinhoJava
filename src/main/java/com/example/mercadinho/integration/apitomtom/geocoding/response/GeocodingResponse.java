@@ -1,4 +1,4 @@
-package com.example.mercadinho.integration.apitomtom.response;
+package com.example.mercadinho.integration.apitomtom.geocoding.response;
 
 
 import lombok.Builder;

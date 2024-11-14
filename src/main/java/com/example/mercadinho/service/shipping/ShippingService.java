@@ -1,12 +1,19 @@
 package com.example.mercadinho.service.shipping;
 
-import com.example.mercadinho.integration.apitomtom.GeocodingIntegration;
-import com.example.mercadinho.integration.apitomtom.response.GeocodingResponse;
+import com.example.mercadinho.integration.apitomtom.geocoding.GeocodingIntegration;
+import com.example.mercadinho.integration.apitomtom.geocoding.response.GeocodingResponse;
+import com.example.mercadinho.integration.apitomtom.routing.RoutingIntegration;
+import com.example.mercadinho.integration.apitomtom.routing.response.RoutingResponse;
 import com.example.mercadinho.integration.viacep.ViaCepIntegration;
 import com.example.mercadinho.integration.viacep.response.ViaCepResponse;
+import com.example.mercadinho.service.shipping.response.ShippingResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -15,17 +22,30 @@ public class ShippingService {
 
     private final GeocodingIntegration geocodingIntegration;
     private final ViaCepIntegration viaCepIntegration;
+    private final RoutingIntegration routingIntegration;
 
-    public void calculateShipping(String cep) {
+    public ShippingResponse calculateShipping(String cep) {
         ViaCepResponse address = viaCepIntegration.findAddress(cep);
         GeocodingResponse coordinates = geocodingIntegration.findCoordinates(formatAddress(address));
-        log.info(coordinates.toString());
+        RoutingResponse meters = routingIntegration.findMeters(formatCoordinates(coordinates));
+        BigDecimal calculate = BigDecimal.valueOf(1.50*meters.routes().get(0).summary().lengthInMeters()/1000);
+        return ShippingResponse.builder().calculate(calculate.setScale(2, RoundingMode.HALF_UP)).build();
     }
 
     private String formatAddress(ViaCepResponse address) {
         return address.address()
                 +"%20"+address.city()
                 +"%20"+address.state();
+    }
+
+    private String formatCoordinates(GeocodingResponse coordinates) {
+        StringBuilder formattedCoordinates = new StringBuilder();
+        coordinates.results().forEach(e ->
+                formattedCoordinates.append(e.position().lat())
+                        .append(",")
+                        .append(e.position().lon())
+        );
+        return formattedCoordinates.toString();
     }
 
 }

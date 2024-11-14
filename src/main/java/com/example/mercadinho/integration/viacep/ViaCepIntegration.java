@@ -1,10 +1,7 @@
 package com.example.mercadinho.integration.viacep;
 
-import com.example.mercadinho.integration.apitomtom.response.GeocodingResponse;
 import com.example.mercadinho.integration.viacep.response.ViaCepResponse;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
