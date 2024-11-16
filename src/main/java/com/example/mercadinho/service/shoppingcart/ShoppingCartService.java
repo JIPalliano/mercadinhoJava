@@ -22,7 +22,7 @@ public class ShoppingCartService implements ShoppingCartFacade {
 
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductRepository productRepository;
-    private final ShippingService shippingService;
+    //private final ShippingService shippingService;
 
     @Override
     public ShoppingCartEntity create(String idProduct, Integer quantity) {
