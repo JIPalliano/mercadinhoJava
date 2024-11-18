@@ -35,26 +35,24 @@ class ProductServiceTest {
     @DisplayName("Test creating the product")
     void addProduct_shouldSaveAndReturnProduct() {
         ProductRequest request = ProductRequest.builder()
-                .id("user123")
-                .name("Product A")
-                .price(BigDecimal.valueOf(12.0))
-                .quantity(1)
-                .build();
-
-        ProductEntity expectedProduct  = ProductEntity.builder()
-                .id("user123")
                 .name("Product A")
                 .price(BigDecimal.valueOf(12.0))
                 .quantity(100)
                 .build();
-        when(productRepository.save(any(ProductEntity.class))).thenReturn(expectedProduct);
+
+        ProductEntity product  = ProductEntity.builder()
+                .name("Product A")
+                .price(BigDecimal.valueOf(12.0))
+                .quantity(100)
+                .build();
+        when(productRepository.save(any(ProductEntity.class))).thenReturn(product);
 
         ProductEntity result = productService.createProduct(request);
 
         assertNotNull(result);
         assertEquals("Product A", result.name());
         assertEquals(100, result.quantity());
-        verify(productRepository, times(1)).save(any(ProductEntity.class));
+        verify(productRepository, times(1)).save(product);
     }
 
     @Test
