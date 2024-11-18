@@ -32,10 +32,10 @@ class ShoppingCartRepositoryTest {
 
         shoppingCartRepository.save(ShoppingCartEntity.builder()
                 .products(List.of(Product.builder()
-                        .name("caderno")
-                        .price(BigDecimal.valueOf(12.0))
-                        .quantity(1)
-                        .build(),
+                                .name("caderno")
+                                .price(BigDecimal.valueOf(12.0))
+                                .quantity(1)
+                                .build(),
                         Product.builder()
                                 .name("folha")
                                 .price(BigDecimal.valueOf(5.0))
@@ -51,17 +51,17 @@ class ShoppingCartRepositoryTest {
     void findByUserIdCaseOne() {
         Optional<ShoppingCartEntity> result = shoppingCartRepository.findByUserId("user123");
 
-        assertTrue(result.isPresent(), "The shopping cart should be present");
-        assertEquals("user123", result.get().getUserId(), "UserId should match");
-        assertEquals(2, result.get().getProducts().size(), "Cart should have 2 items");
+        assertTrue(result.isPresent(), "The shopping cart exist");
+        assertEquals("user123", result.get().getUserId(), "UserId is equals");
+        assertEquals(2, result.get().getProducts().size(), "Shopping Cart have 2 items");
     }
 
     @Test
     @DisplayName("Return empty when userId does not exist")
     void findByUserIdCaseTwo() {
-        Optional<ShoppingCartEntity> result = shoppingCartRepository.findByUserId("unknownUser");
+        Optional<ShoppingCartEntity> result = shoppingCartRepository.findByUserId("user1");
 
-        assertTrue(result.isEmpty(), "The shopping cart should not be present");
+        assertTrue(result.isEmpty(), "The shopping cart not be present");
     }
 
 }

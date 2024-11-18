@@ -44,7 +44,7 @@ public class ResourceExceptionHandler {
     public Map<String, String> handleExceptionNotFound(
             NoSuchElementException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put(ex.getLocalizedMessage(), "Value not found.");
+        error.put(ex.getLocalizedMessage(), "Product not found.");
         return error;
     }
 }

@@ -26,12 +26,12 @@ public class ProductService implements ProductFacade{
 
     @Override
     public ProductEntity updateProduct(String idProduct, ProductRequest request){
-        return productRepository.findById(idProduct).map(product -> ProductEntity.builder()
+        return productRepository.findById(idProduct).map(product -> productRepository.save(ProductEntity.builder()
                 .id(product.id())
                 .name(request.name())
                 .price(request.price())
                 .quantity(request.quantity())
-                .build()).orElseThrow();
+                .build())).orElseThrow();
     }
 
     @Override
