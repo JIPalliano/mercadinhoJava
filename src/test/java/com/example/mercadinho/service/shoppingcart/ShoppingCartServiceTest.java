@@ -15,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -281,7 +280,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    @DisplayName("Should delete shopping cart.")
+    @DisplayName("Should to throw exception not find shopping cart.")
     void shouldExceptionNoFindShoppingCart() {
 
         when(shoppingCartRepository.findByUserId(user.getId()))
@@ -297,8 +296,8 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    @DisplayName("Should delete shopping cart.")
-    void shouldExceptionNoFindShoppingCartInUser() {
+    @DisplayName("Should find shopping cart the user.")
+    void shouldFindShoppingCartInUser() {
 
         Product productA = Product.builder()
                 .id("product1")
