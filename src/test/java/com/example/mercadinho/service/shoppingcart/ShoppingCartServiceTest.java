@@ -1,5 +1,6 @@
 package com.example.mercadinho.service.shoppingcart;
 
+import com.example.mercadinho.controller.response.ShoppingCartResponse;
 import com.example.mercadinho.domain.repository.ProductRepository;
 import com.example.mercadinho.domain.repository.ShoppingCartRepository;
 import com.example.mercadinho.domain.repository.model.Product;
@@ -14,6 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -246,7 +250,7 @@ class ShoppingCartServiceTest {
     @Test
     @DisplayName("Should delete shopping cart.")
     void shouldDeleteShoppingCart() {
-        ProductEntity productA = ProductEntity.builder()
+        Product productA = Product.builder()
                 .id("product1")
                 .name("Product 1")
                 .price(BigDecimal.valueOf(10.0))
@@ -262,20 +266,72 @@ class ShoppingCartServiceTest {
 
         shoppingCartEntity = ShoppingCartEntity.builder()
                 .id("shoppingCart1")
-                .products(new ArrayList<>(List.of(productB)))
+                .products(new ArrayList<>(List.of(productB, productA)))
                 .userId(user.getId())
                 .build();
 
         when(shoppingCartRepository.findByUserId(user.getId()))
                 .thenReturn(Optional.of(shoppingCartEntity));
 
+        shoppingCartService.delete();
+
+        verify(shoppingCartRepository).findByUserId(user.getId());
+        verify(shoppingCartRepository).deleteById(shoppingCartEntity.getId());
+        System.out.println(shoppingCartEntity);
+    }
+
+    @Test
+    @DisplayName("Should delete shopping cart.")
+    void shouldExceptionNoFindShoppingCart() {
+
+        when(shoppingCartRepository.findByUserId(user.getId()))
+                .thenReturn(Optional.empty());
+
         RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> shoppingCartService.addProduct(productA.id(), -2)
+                RuntimeException.class,()->shoppingCartService.delete()
         );
 
-        assertEquals("Product cant be added!", exception.getMessage());
-        assertEquals(1, shoppingCartEntity.getProducts().size());
+        assertEquals("ShoppingCart not found!", exception.getMessage());
+
+        System.out.println(shoppingCartEntity);
+    }
+
+    @Test
+    @DisplayName("Should delete shopping cart.")
+    void shouldExceptionNoFindShoppingCartInUser() {
+
+        Product productA = Product.builder()
+                .id("product1")
+                .name("Product 1")
+                .price(BigDecimal.valueOf(10.0))
+                .quantity(1)
+                .build();
+
+        Product productB = Product.builder()
+                .id("product2")
+                .name("Product 2")
+                .price(BigDecimal.valueOf(15.0))
+                .quantity(1)
+                .build();
+
+        shoppingCartEntity = ShoppingCartEntity.builder()
+                .id("shoppingCart1")
+                .products(new ArrayList<>(List.of(productB, productA)))
+                .userId(user.getId())
+                .date(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(LocalDateTime.now()))
+                .build();
+
+        when(shoppingCartRepository.findByUserId(user.getId()))
+                .thenReturn(Optional.of(shoppingCartEntity));
+
+        ShoppingCartResponse shoppingCart = shoppingCartService.find();
+
+        assertEquals(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(LocalDateTime.now()), shoppingCart.date());
+        assertEquals(2,shoppingCart.products().size());
+        assertEquals(shoppingCart.userId(), user.getId());
+        assertEquals(shoppingCart.quantity(), 2);
+        assertEquals(shoppingCart.totalPrice(), BigDecimal.valueOf(25.0));
+
         System.out.println(shoppingCartEntity);
     }
 

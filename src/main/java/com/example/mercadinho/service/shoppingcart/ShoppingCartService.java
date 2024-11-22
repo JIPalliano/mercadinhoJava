@@ -86,7 +86,7 @@ public class ShoppingCartService implements ShoppingCartFacade {
         shoppingCartRepository.findByUserId(UserService.getCurrentUser().getId())
                 .ifPresentOrElse(
                         shoppingCart -> shoppingCartRepository.deleteById(shoppingCart.getId()),
-                        ()-> new RuntimeException("ShoppingCart not found!")
+                        ()-> {throw new RuntimeException("ShoppingCart not found!");}
                 );
     }
 
@@ -111,7 +111,7 @@ public class ShoppingCartService implements ShoppingCartFacade {
                             .date(shoppingCartEntity.getDate())
                             .build();
                 })
-                .orElseThrow();
+                .orElseThrow(()-> new RuntimeException("ShoppingCart not found!"));
     }
     @Override
     public List<ShoppingCartEntity> findAll() {
