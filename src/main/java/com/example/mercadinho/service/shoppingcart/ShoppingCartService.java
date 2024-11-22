@@ -31,11 +31,11 @@ public class ShoppingCartService implements ShoppingCartFacade {
                         .id(idProduct)
                         .name(product.name())
                         .price(product.price())
-                        .quantity(quantity)
+                        .quantity(quantity > 0? quantity : 1)
                         .build()))
                 .userId(UserService.getCurrentUser().getId())
                 .date(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(LocalDateTime.now()))
-                .build())).orElseThrow(() -> new RuntimeException("Product not found!!"));
+                .build())).orElseThrow(() -> new RuntimeException("Product not found!"));
     }
 
     @Override
@@ -64,6 +64,8 @@ public class ShoppingCartService implements ShoppingCartFacade {
                         () -> {
                             if (quantity > 0) {
                                 products.add(findProduct(idProduct, quantity));
+                            }else{
+                                throw new RuntimeException("Product cant be added!");
                             }
                         }
                 );
@@ -80,8 +82,12 @@ public class ShoppingCartService implements ShoppingCartFacade {
 
 
     @Override
-    public void delete(String idShoppingCart) {
-        shoppingCartRepository.deleteById(idShoppingCart);
+    public void delete() {
+        shoppingCartRepository.findByUserId(UserService.getCurrentUser().getId())
+                .ifPresentOrElse(
+                        shoppingCart -> shoppingCartRepository.deleteById(shoppingCart.getId()),
+                        ()-> new RuntimeException("ShoppingCart not found!")
+                );
     }
 
     @Override
@@ -109,14 +115,7 @@ public class ShoppingCartService implements ShoppingCartFacade {
     }
     @Override
     public List<ShoppingCartEntity> findAll() {
-        return this.shoppingCartRepository.findAll();
+        return shoppingCartRepository.findAll();
     }
-
-
-
-//    @Override
-//    public ShoppingCartEntity findShoppingCartCookie(){
-//        return null;//repository.findById(cookie.readCookie(request, "Carrinho-salvado")).orElse(null);
-//    }
 
 }

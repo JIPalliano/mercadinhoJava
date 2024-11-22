@@ -12,7 +12,7 @@ public interface ShoppingCartFacade {
 
     ShoppingCartEntity addProduct(String idProduct, Integer quantity);
 
-    void delete(String idShoppingCart);
+    void delete();
 
     List<ShoppingCartEntity> findAll();
 

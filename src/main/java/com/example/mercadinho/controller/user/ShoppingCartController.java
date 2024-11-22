@@ -28,9 +28,9 @@ public class ShoppingCartController {
         return this.facade.addProduct(idProduct, quantity);
     }
 
-    @DeleteMapping(path="{id-shopping-cart}")
-    public void delete(@PathVariable("id-shopping-cart") String idShoppingCart) {
-        this.facade.delete(idShoppingCart);
+    @DeleteMapping(path="delete")
+    public void delete() {
+        this.facade.delete();
     }
 
     @GetMapping(path="user-shopping-cart")
@@ -39,20 +39,5 @@ public class ShoppingCartController {
         return this.facade.find();
     }
 
-//    @GetMapping(path="api")
-//    @RolesAllowed({"USER","ADMIN"})
-//    public Object getExampleData(@RequestBody AddressRequest address){
-//        return this.facade.getExampleData(address);
-//    }
-
-//    @GetMapping(path="/cookie")
-//    public ShoppingCartEntity findShoppingCartCookie() {
-//        return this.facade.findShoppingCartCookie();
-//    }
-
-//    @PatchMapping(path = "/item")
-//    public ShoppingCartEntity removeItemQuantity(String shoppingCartId, ProductRequest productRequest) {
-//
-//    }
 
 }

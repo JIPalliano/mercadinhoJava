@@ -6,24 +6,22 @@ import com.example.mercadinho.domain.repository.model.Product;
 import com.example.mercadinho.domain.repository.model.entity.ProductEntity;
 import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import com.example.mercadinho.domain.repository.model.entity.UserEntity;
-import com.example.mercadinho.service.user.UserService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-
+@ExtendWith(MockitoExtension.class)
 class ShoppingCartServiceTest {
 
 
@@ -34,108 +32,251 @@ class ShoppingCartServiceTest {
     private ProductRepository productRepository;
 
     @Mock
-    private UserService userService;
+    private ShoppingCartEntity shoppingCartEntity;
+
+    @Mock
+    private UserEntity user;
 
     @InjectMocks
     private ShoppingCartService shoppingCartService;
 
+    //cria um contexto apenas para os testes
     @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
-        UserEntity currentUser = UserEntity.builder()
+    void setupUserService() {
+        user = UserEntity.builder()
                 .id("user1")
                 .username("user1")
                 .password("password1")
-                .role("USER")
+                .role("ADMIN")
                 .build();
 
-        // Criar uma autenticação fictícia
         UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(currentUser, null, List.of());
+                new UsernamePasswordAuthenticationToken(user, null, List.of());
 
-        // Configurar o SecurityContextHolder com a autenticação fictícia
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     @Test
-    @DisplayName("Testing method")
-    void addProduct() {
-        String idProduct = "product1";
-        Integer quantity = 2;
-        String userId = "user1";
-
-        Product product = Product.builder()
-                .id(idProduct)
+    @DisplayName("When shopping cart exists and product exists should update quantity")
+    void whenShoppingCartExistsAndProductExists_shouldUpdateQuantity() {
+        Product productA = Product.builder()
+                .id("product1")
                 .name("Product 1")
                 .price(BigDecimal.valueOf(10.0))
-                .quantity(quantity)
+                .quantity(1)
                 .build();
 
-        ShoppingCartEntity existingCart = ShoppingCartEntity.builder()
-                .products(List.of(product))
-                .userId(userId)
+        shoppingCartEntity = ShoppingCartEntity.builder()
+                .id("shoppingCart1")
+                .products(List.of(productA))
+                .userId(user.getId())
                 .build();
 
-            when(shoppingCartRepository.findByUserId(userId))
-                    .thenReturn(Optional.of(existingCart));
-            when(productRepository.findById(idProduct))
-                    .thenReturn(Optional.of(ProductEntity.builder()
-                            .id(idProduct)
-                            .name("Product 1")
-                            .price(BigDecimal.valueOf(10.0))
-                            .quantity(quantity)
-                            .build()));
-            when(shoppingCartRepository.save(any(ShoppingCartEntity.class)))
-                    .thenAnswer(invocation -> invocation.getArgument(0));// Retorna o carrinho salvo
+        when(shoppingCartRepository.save(shoppingCartEntity))
+                .thenReturn(shoppingCartEntity);
 
-        // Execute
-        ShoppingCartEntity result = shoppingCartService.addProduct(idProduct, quantity);
+        when(shoppingCartRepository.findByUserId(user.getId()))
+            .thenReturn(Optional.of(shoppingCartEntity));
 
-        // Assert
+
+        ShoppingCartEntity result = shoppingCartService.addProduct(productA.getId(), 1);
+        System.out.println(shoppingCartEntity);
+
+        Product updatedProduct = result.getProducts().get(0);
         assertNotNull(result);
         assertEquals(1, result.getProducts().size());
-        Product updatedProduct = result.getProducts().get(0);
-        assertEquals(idProduct, updatedProduct.getId());
+        assertEquals(productA.getId(), updatedProduct.getId());
         assertEquals("Product 1", updatedProduct.getName());
-        assertEquals(4, updatedProduct.getQuantity());
+        assertEquals(2, updatedProduct.getQuantity());
+        verify(shoppingCartRepository).save(shoppingCartEntity);
+
     }
 
     @Test
+    @DisplayName("Should create new shopping cart if not exist")
     void shouldCreateNewShoppingCartIfNotExist() {
-        // Mock data
-        String idProduct = "product2";
-        Integer quantity = 0;
-        String userId = "user1";
 
-        Product product = Product.builder()
-                .id(idProduct)
-                .name("Product 2")
-                .price(BigDecimal.valueOf(15.0))
-                .quantity(quantity)
+        ProductEntity product = ProductEntity.builder()
+                .id("product1")
+                .name("Product 1")
+                .price(BigDecimal.valueOf(10.0))
+                .quantity(1)
                 .build();
 
-            when(shoppingCartRepository.findByUserId(userId))
-                    .thenReturn(Optional.empty());
-            when(productRepository.findById(idProduct))
-                    .thenReturn(Optional.of(ProductEntity.builder()
-                            .id(idProduct)
-                            .name("Product 2")
-                            .price(BigDecimal.valueOf(15.0))
-                            .quantity(quantity)
-                            .build()));
-            when(shoppingCartRepository.save(any(ShoppingCartEntity.class)))
-                    .thenAnswer(invocation -> invocation.getArgument(0));
+        when(shoppingCartRepository.findByUserId(user.getId())).thenReturn(Optional.empty());
+        when(productRepository.findById(product.id())).thenReturn(Optional.of(product));
+        when(shoppingCartRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
 
-        // Execute
-        ShoppingCartEntity result = shoppingCartService.addProduct(idProduct, quantity);
+        ShoppingCartEntity result = shoppingCartService.addProduct(product.id(), 1);
 
-        // Assert
         assertNotNull(result);
         assertEquals(1, result.getProducts().size());
-        Product addedProduct = result.getProducts().get(0);
-        assertEquals(idProduct, addedProduct.getId());
-        assertEquals("Product 2", addedProduct.getName());
-        assertEquals(quantity, addedProduct.getQuantity());
+        assertEquals(product.id(), result.getProducts().get(0).getId());
+        assertEquals(product.quantity(), result.getProducts().get(0).getQuantity());
+        Mockito.verify(shoppingCartRepository).save(Mockito.any());
     }
+
+    @Test
+    @DisplayName("Should throw exception when product not found in the repository")
+    void shouldThrowExceptionWhenProductNotFound(){
+        shoppingCartEntity = ShoppingCartEntity.builder()
+                .id("shoppingCart1")
+                .products(List.of())
+                .userId(user.getId())
+                .build();
+        String idProduct = "Product1";
+
+        when(productRepository.findById(idProduct))
+                .thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> shoppingCartService.addProduct(idProduct, 1));
+
+        assertEquals("Product not found!", exception.getMessage());
+
+        verify(shoppingCartRepository).findByUserId(user.getId());
+        verify(productRepository).findById(idProduct);
+        verifyNoMoreInteractions(shoppingCartRepository, productRepository);
+    }
+
+    @Test
+    @DisplayName("When containing shopping cart and product, but updating with quantity 0 must remove the product")
+    void whenShoppingCartExistsAndProductExists_shouldRemoveProduct() {
+        Product productA = Product.builder()
+                .id("product1")
+                .name("Product 1")
+                .price(BigDecimal.valueOf(10.0))
+                .quantity(1)
+                .build();
+
+        shoppingCartEntity = ShoppingCartEntity.builder()
+                .id("shoppingCart1")
+                .products(new ArrayList<>(List.of(productA)))
+                .userId(user.getId())
+                .build();
+
+        when(shoppingCartRepository.findByUserId(user.getId()))
+                .thenReturn(Optional.of(shoppingCartEntity));
+        when(shoppingCartRepository.save(shoppingCartEntity))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        shoppingCartService.addProduct(productA.getId(), -2);
+
+        assertTrue(shoppingCartEntity.getProducts().isEmpty(), "Product list should be empty after removal");
+
+        verify(shoppingCartRepository).save(shoppingCartEntity);
+
+        verify(productRepository, never()).findById(Mockito.any());
+    }
+
+    @Test
+    @DisplayName("When containing shopping cart and product, but product no content in list, should add product in list.")
+    void whenShoppingCartExistsAndProductExists_shouldAddProduct() {
+        ProductEntity productA = ProductEntity.builder()
+                .id("product1")
+                .name("Product 1")
+                .price(BigDecimal.valueOf(10.0))
+                .quantity(1)
+                .build();
+
+        Product productB = Product.builder()
+                .id("product2")
+                .name("Product 2")
+                .price(BigDecimal.valueOf(15.0))
+                .quantity(1)
+                .build();
+
+        shoppingCartEntity = ShoppingCartEntity.builder()
+                .id("shoppingCart1")
+                .products(new ArrayList<>(List.of(productB)))
+                .userId(user.getId())
+                .build();
+
+        when(shoppingCartRepository.findByUserId(user.getId()))
+                .thenReturn(Optional.of(shoppingCartEntity));
+        when(productRepository.findById(productA.id())).thenReturn(Optional.of(productA));
+        when(shoppingCartRepository.save(shoppingCartEntity))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        shoppingCartService.addProduct(productA.id(), 2);
+
+        assertEquals(2, shoppingCartEntity.getProducts().size());
+
+        verify(shoppingCartRepository).save(shoppingCartEntity);
+        System.out.println(shoppingCartEntity);
+    }
+
+    @Test
+    @DisplayName("When containing shopping cart and product,but quantity the product 0, should execption.")
+    void shouldThrowExceptionWhenAddingNegativeQuantity() {
+        ProductEntity productA = ProductEntity.builder()
+                .id("product1")
+                .name("Product 1")
+                .price(BigDecimal.valueOf(10.0))
+                .quantity(1)
+                .build();
+
+        Product productB = Product.builder()
+                .id("product2")
+                .name("Product 2")
+                .price(BigDecimal.valueOf(15.0))
+                .quantity(1)
+                .build();
+
+        shoppingCartEntity = ShoppingCartEntity.builder()
+                .id("shoppingCart1")
+                .products(new ArrayList<>(List.of(productB)))
+                .userId(user.getId())
+                .build();
+
+        when(shoppingCartRepository.findByUserId(user.getId()))
+                .thenReturn(Optional.of(shoppingCartEntity));
+
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> shoppingCartService.addProduct(productA.id(), -2)
+        );
+
+        assertEquals("Product cant be added!", exception.getMessage());
+        assertEquals(1, shoppingCartEntity.getProducts().size());
+        System.out.println(shoppingCartEntity);
+    }
+
+    @Test
+    @DisplayName("Should delete shopping cart.")
+    void shouldDeleteShoppingCart() {
+        ProductEntity productA = ProductEntity.builder()
+                .id("product1")
+                .name("Product 1")
+                .price(BigDecimal.valueOf(10.0))
+                .quantity(1)
+                .build();
+
+        Product productB = Product.builder()
+                .id("product2")
+                .name("Product 2")
+                .price(BigDecimal.valueOf(15.0))
+                .quantity(1)
+                .build();
+
+        shoppingCartEntity = ShoppingCartEntity.builder()
+                .id("shoppingCart1")
+                .products(new ArrayList<>(List.of(productB)))
+                .userId(user.getId())
+                .build();
+
+        when(shoppingCartRepository.findByUserId(user.getId()))
+                .thenReturn(Optional.of(shoppingCartEntity));
+
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> shoppingCartService.addProduct(productA.id(), -2)
+        );
+
+        assertEquals("Product cant be added!", exception.getMessage());
+        assertEquals(1, shoppingCartEntity.getProducts().size());
+        System.out.println(shoppingCartEntity);
+    }
+
 }
