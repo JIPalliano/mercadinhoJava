@@ -83,7 +83,6 @@ class ShoppingCartServiceTest {
 
 
         ShoppingCartEntity result = shoppingCartService.addProduct(productA.getId(), 1);
-        System.out.println(shoppingCartEntity);
 
         Product updatedProduct = result.getProducts().get(0);
         assertNotNull(result);
@@ -207,7 +206,6 @@ class ShoppingCartServiceTest {
         assertEquals(2, shoppingCartEntity.getProducts().size());
 
         verify(shoppingCartRepository).save(shoppingCartEntity);
-        System.out.println(shoppingCartEntity);
     }
 
     @Test
@@ -243,7 +241,6 @@ class ShoppingCartServiceTest {
 
         assertEquals("Product cant be added!", exception.getMessage());
         assertEquals(1, shoppingCartEntity.getProducts().size());
-        System.out.println(shoppingCartEntity);
     }
 
     @Test
@@ -276,7 +273,6 @@ class ShoppingCartServiceTest {
 
         verify(shoppingCartRepository).findByUserId(user.getId());
         verify(shoppingCartRepository).deleteById(shoppingCartEntity.getId());
-        System.out.println(shoppingCartEntity);
     }
 
     @Test
@@ -292,7 +288,6 @@ class ShoppingCartServiceTest {
 
         assertEquals("ShoppingCart not found!", exception.getMessage());
 
-        System.out.println(shoppingCartEntity);
     }
 
     @Test
@@ -330,8 +325,6 @@ class ShoppingCartServiceTest {
         assertEquals(shoppingCart.userId(), user.getId());
         assertEquals(shoppingCart.quantity(), 2);
         assertEquals(shoppingCart.totalPrice(), BigDecimal.valueOf(25.0));
-
-        System.out.println(shoppingCartEntity);
     }
 
 }
