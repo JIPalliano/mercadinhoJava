@@ -41,7 +41,7 @@ public class ProductService implements ProductFacade{
 
     @Override
     public ProductEntity findById(ProductEntity id){
-        return productRepository.findById(id.id()).orElse(null);
+        return productRepository.findById(id.id()).orElseThrow();
     }
 
     @Override

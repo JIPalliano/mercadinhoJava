@@ -37,7 +37,7 @@ class ShoppingCartServiceTest {
     @Mock
     private ShoppingCartEntity shoppingCartEntity;
 
-    @Mock
+
     private UserEntity user;
 
     @InjectMocks
@@ -46,6 +46,8 @@ class ShoppingCartServiceTest {
     //cria um contexto apenas para os testes
     @BeforeEach
     void setupUserService() {
+        shoppingCartRepository.deleteAll();
+
         user = UserEntity.builder()
                 .id("user1")
                 .username("user1")
