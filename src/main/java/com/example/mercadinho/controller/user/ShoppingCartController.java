@@ -39,7 +39,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping(path="/user-shopping-cart")
-    @RolesAllowed({"USER","ADMIN"})
+    //@RolesAllowed({"USER","ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     public ShoppingCartResponse find(){
         return this.facade.find();
