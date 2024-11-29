@@ -1,42 +1,30 @@
 package com.example.mercadinho.controller.user;
 
-import com.example.mercadinho.domain.repository.ProductRepository;
 import com.example.mercadinho.domain.repository.ShoppingCartRepository;
 import com.example.mercadinho.domain.repository.model.Product;
-import com.example.mercadinho.domain.repository.model.entity.ProductEntity;
 import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import com.example.mercadinho.domain.repository.model.entity.UserEntity;
-import com.example.mercadinho.service.product.ProductService;
-import com.example.mercadinho.service.shoppingcart.ShoppingCartService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -111,7 +99,7 @@ class ShoppingCartControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "user2", roles = "USER")
+    @DisplayName("Should look for the shopping cart")
     void testFindShoppingCart() throws Exception {
 
         Product productA = Product.builder()
@@ -138,6 +126,7 @@ class ShoppingCartControllerTest {
     }
 
     @Test
+    @DisplayName("Should delete the shopping cart")
     void testDeleteShoppingCart() throws Exception {
 
         ShoppingCartEntity cart = new ShoppingCartEntity();

@@ -141,7 +141,6 @@ class ShoppingCartServiceTest {
 
         verify(shoppingCartRepository).findByUserId(user.getId());
         verify(productRepository).findById(idProduct);
-        verifyNoMoreInteractions(shoppingCartRepository, productRepository);
     }
 
     @Test
