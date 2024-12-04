@@ -25,12 +25,12 @@ public class ProductController {
 
     private final ProductFacade facade;
 
-    @Operation
     @GetMapping(path="{id-product}")
+    @Operation(summary = "Procura produto", description = "Procura o produto a partir do ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Produto encontrado.",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ShoppingCartEntity.class))}),
+                            schema = @Schema(implementation = ProductEntity.class))}),
             @ApiResponse(responseCode = "400", description = "Erro na criação do produto.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))}),
@@ -48,10 +48,11 @@ public class ProductController {
     }
 
     @GetMapping
+    @Operation(summary = "Encontra os produtos", description = "Encontra todos os produtos.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Todos produtos encontrados.",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ShoppingCartEntity.class))}),
+                            schema = @Schema(implementation = ProductEntity.class))}),
             @ApiResponse(responseCode = "400", description = "Erro ao encontrar os produtos.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))}),
