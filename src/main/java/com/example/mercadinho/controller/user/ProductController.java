@@ -2,9 +2,15 @@ package com.example.mercadinho.controller.user;
 
 
 
+import com.example.mercadinho.controller.response.ErrorResponse;
+import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import com.example.mercadinho.service.product.ProductFacade;
 import com.example.mercadinho.domain.repository.model.entity.ProductEntity;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +27,43 @@ public class ProductController {
 
     @Operation
     @GetMapping(path="{id-product}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produto encontrado.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ShoppingCartEntity.class))}),
+            @ApiResponse(responseCode = "400", description = "Erro na criação do produto.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "403", description = "Login não efetuado.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Produto não encontrado no banco.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})})
     public ProductEntity findById(@PathVariable("id-product") ProductEntity idProduct) {
         return this.facade.findById(idProduct);
     }
 
     @GetMapping
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Todos produtos encontrados.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ShoppingCartEntity.class))}),
+            @ApiResponse(responseCode = "400", description = "Erro ao encontrar os produtos.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "Produtos não encontrados.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "403", description = "Login não efetuado.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Produtos não encontrados no banco.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class))})})
     public List<ProductEntity> findAll() {
         return this.facade.findAll();
     }
