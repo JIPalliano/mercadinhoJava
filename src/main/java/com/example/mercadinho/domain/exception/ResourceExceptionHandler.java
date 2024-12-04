@@ -1,5 +1,6 @@
 package com.example.mercadinho.domain.exception;
 
+import com.example.mercadinho.controller.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -7,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -15,11 +18,13 @@ import java.util.NoSuchElementException;
 public class ResourceExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({HttpMessageNotReadableException.class})
-    public Map<String, String> handleMessageNotReadableException(
+    public ErrorResponse handleMessageNotReadableException(
             HttpMessageNotReadableException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put(ex.getLocalizedMessage(), ex.getMessage());
-        return error;
+        return ErrorResponse.builder()
+                .errorCode(ex.hashCode())
+                .message(ex.getMessage())
+                .timeStamp(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(LocalDateTime.now()))
+                .build();
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)

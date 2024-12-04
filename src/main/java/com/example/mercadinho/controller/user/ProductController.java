@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping(path="/v1/merchandiser")
-@Tag(name="a")
+@Tag(name = "Produto", description = "Gerenciamento de produto")
 public class ProductController {
 
     private final ProductFacade facade;
