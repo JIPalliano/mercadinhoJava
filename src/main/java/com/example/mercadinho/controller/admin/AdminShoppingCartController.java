@@ -4,10 +4,12 @@ package com.example.mercadinho.controller.admin;
 import com.example.mercadinho.controller.response.ErrorResponse;
 import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import com.example.mercadinho.service.shoppingcart.ShoppingCartFacade;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping(path="/v1/admin/shopping-cart")
+@Tag(name = "Carrinho de compras Admin", description = "Gerenciamento de carrinhos de compras em nivel de Admin")
 public class AdminShoppingCartController {
 
     private final ShoppingCartFacade shoppingCartFacade;
@@ -26,6 +29,7 @@ public class AdminShoppingCartController {
 
     @GetMapping
     @RolesAllowed("ADMIN")
+    @Operation(summary = "Lista todos os produtos", description = "Procura todos os produtos e faz uma listagem.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Carrinhos de compras encontrados.",
                     content = { @Content(mediaType = "application/json",
