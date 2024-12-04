@@ -47,7 +47,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.18.0'
 	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'junit:junit:4.13.2'
+	implementation 'org.pitest:pitest-junit5-plugin:1.2.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
 
 }
 
@@ -58,10 +59,12 @@ dependencyManagement {
 }
 
 pitest {
-	targetClasses = ['com.example.mercadinho']
+	junit5PluginVersion = '1.2.1'
+	pitestVersion = '1.17.2'
+	targetClasses = ['com.example.*']
+	verbose = true
 	threads = 2
 	outputFormats = ['HTML']
-	verbose = true
 }
 
 tasks.named('test') {
