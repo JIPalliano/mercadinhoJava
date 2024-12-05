@@ -3,7 +3,6 @@ package com.example.mercadinho.controller.user;
 
 
 import com.example.mercadinho.controller.response.ErrorResponse;
-import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
 import com.example.mercadinho.service.product.ProductFacade;
 import com.example.mercadinho.domain.repository.model.entity.ProductEntity;
 import io.swagger.v3.oas.annotations.Operation;

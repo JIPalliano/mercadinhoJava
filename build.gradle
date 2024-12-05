@@ -61,7 +61,7 @@ dependencyManagement {
 pitest {
 	junit5PluginVersion = '1.2.1'
 	pitestVersion = '1.17.2'
-	targetClasses = ['com.example.*']
+	targetClasses = ['com.example.mercadinho.service.*']
 	verbose = true
 	threads = 2
 	outputFormats = ['HTML']

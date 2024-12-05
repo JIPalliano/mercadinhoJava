@@ -34,7 +34,7 @@ public class ShoppingCartService implements ShoppingCartFacade {
                         .id(idProduct)
                         .name(product.name())
                         .price(product.price())
-                        .quantity(quantity > 0? quantity : 1)
+                        .quantity(quantity > 0 ? quantity : product.quantity())
                         .build()))
                 .userId(UserService.getCurrentUser().getId())
                 .date(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(LocalDateTime.now()))

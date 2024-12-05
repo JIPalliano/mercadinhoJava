@@ -164,13 +164,38 @@ class ShoppingCartServiceTest {
         when(shoppingCartRepository.save(shoppingCartEntity))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        shoppingCartService.addProduct(productA.getId(), -2);
+        ShoppingCartEntity result = shoppingCartService.addProduct(productA.getId(), -1);
 
         assertTrue(shoppingCartEntity.getProducts().isEmpty(), "Product list should be empty after removal");
+        assertEquals(0, result.getProducts().size());
 
         verify(shoppingCartRepository).save(shoppingCartEntity);
 
         verify(productRepository, never()).findById(Mockito.any());
+    }
+
+    @Test
+    @DisplayName("When containing shopping cart and product, but updating get quantity 0")
+    void whenShoppingCartExistsAndProductExists_ShouldAddOneQuantity (){
+        ProductEntity productB = ProductEntity.builder()
+                .id("product1")
+                .name("Product 1")
+                .price(BigDecimal.valueOf(10.0))
+                .quantity(1)
+                .build();
+        int quantity = 0;
+        when(shoppingCartRepository.findByUserId(user.getId())).thenReturn(Optional.empty());
+        when(productRepository.findById(productB.id())).thenReturn(Optional.of(productB));
+        when(shoppingCartRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ShoppingCartEntity result = shoppingCartService.addProduct(productB.id(), quantity);
+        int resultQuantity = quantity >= 0? quantity : productB.quantity();
+
+        assertTrue(shoppingCartEntity.getProducts().isEmpty(), "Product list should be empty after removal");
+        assertEquals(1, result.getProducts().stream().mapToInt(Product::getQuantity).sum());
+        assertEquals(0, resultQuantity);
+
+        Mockito.verify(shoppingCartRepository).save(Mockito.any());
     }
 
     @Test
@@ -205,6 +230,46 @@ class ShoppingCartServiceTest {
         shoppingCartService.addProduct(productA.id(), 2);
 
         assertEquals(2, shoppingCartEntity.getProducts().size());
+
+        verify(shoppingCartRepository).save(shoppingCartEntity);
+    }
+
+    @Test
+    @DisplayName("")
+    void whenShoppingCartExistsAndProductExists_shouldAddProductNegative() {
+        int quantity = 0;
+
+        ProductEntity productA = ProductEntity.builder()
+                .id("product1")
+                .name("Product 1")
+                .price(BigDecimal.valueOf(10.0))
+                .quantity(1)
+                .build();
+
+        Product productB = Product.builder()
+                .id("product2")
+                .name("Product 2")
+                .price(BigDecimal.valueOf(15.0))
+                .quantity(1)
+                .build();
+
+        shoppingCartEntity = ShoppingCartEntity.builder()
+                .id("shoppingCart1")
+                .products(new ArrayList<>(List.of(productB)))
+                .userId(user.getId())
+                .build();
+
+        when(shoppingCartRepository.findByUserId(user.getId()))
+                .thenReturn(Optional.of(shoppingCartEntity));
+        when(productRepository.findById(productA.id())).thenReturn(Optional.of(productA));
+        when(shoppingCartRepository.save(shoppingCartEntity))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        ShoppingCartEntity result = shoppingCartService.addProduct(productA.id(), 0);
+        int resultQuantity = quantity >= 0? quantity : productA.quantity();
+
+        assertEquals(2, result.getProducts().size());
+        assertEquals(0, resultQuantity);
 
         verify(shoppingCartRepository).save(shoppingCartEntity);
     }
@@ -324,8 +389,21 @@ class ShoppingCartServiceTest {
         assertEquals(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(LocalDateTime.now()), shoppingCart.date());
         assertEquals(2,shoppingCart.products().size());
         assertEquals(shoppingCart.userId(), user.getId());
-        assertEquals(shoppingCart.quantity(), 2);
+        assertEquals(2, shoppingCart.quantity());
         assertEquals(shoppingCart.totalPrice(), BigDecimal.valueOf(25.0));
     }
 
+    @Test
+    @DisplayName("")
+    void shouldThrowExceptionWhenAllShoppingCartNotFound(){
+
+        when(shoppingCartRepository.findAll())
+                .thenReturn(List.of());
+
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> shoppingCartService.findAll());
+
+        assertEquals("ShoppingCart not found!", exception.getMessage());
+
+    }
 }
