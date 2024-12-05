@@ -14,7 +14,10 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -115,7 +118,9 @@ public class ShoppingCartService implements ShoppingCartFacade {
     }
     @Override
     public List<ShoppingCartEntity> findAll() {
-        return shoppingCartRepository.findAll();
+        return Optional.of(shoppingCartRepository.findAll())
+                .filter(carts -> !carts.isEmpty())
+                .orElseThrow(() -> new RuntimeException("ShoppingCart not found!"));
     }
 
 }
