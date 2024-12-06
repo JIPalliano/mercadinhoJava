@@ -122,28 +122,6 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw exception when product not found in the repository")
-    void shouldThrowExceptionWhenProductNotFound(){
-        shoppingCartEntity = ShoppingCartEntity.builder()
-                .id("shoppingCart1")
-                .products(List.of())
-                .userId(user.getId())
-                .build();
-        String idProduct = "Product1";
-
-        when(productRepository.findById(idProduct))
-                .thenReturn(Optional.empty());
-
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> shoppingCartService.addProduct(idProduct, 1));
-
-        assertEquals("Product not found!", exception.getMessage());
-
-        verify(shoppingCartRepository).findByUserId(user.getId());
-        verify(productRepository).findById(idProduct);
-    }
-
-    @Test
     @DisplayName("When containing shopping cart and product, but updating with quantity 0 must remove the product")
     void whenShoppingCartExistsAndProductExists_shouldRemoveProduct() {
         Product productA = Product.builder()
@@ -189,11 +167,10 @@ class ShoppingCartServiceTest {
         when(shoppingCartRepository.save(Mockito.any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         ShoppingCartEntity result = shoppingCartService.addProduct(productB.id(), quantity);
-        int resultQuantity = quantity >= 0? quantity : productB.quantity();
 
         assertTrue(shoppingCartEntity.getProducts().isEmpty(), "Product list should be empty after removal");
         assertEquals(1, result.getProducts().stream().mapToInt(Product::getQuantity).sum());
-        assertEquals(0, resultQuantity);
+        assertEquals(0, quantity);
 
         Mockito.verify(shoppingCartRepository).save(Mockito.any());
     }
@@ -230,82 +207,9 @@ class ShoppingCartServiceTest {
         ShoppingCartEntity cart = shoppingCartService.addProduct(productA.id(), 2);
 
         assertEquals(2, cart.getProducts().size());
+        assertNotNull(cart, "O método nunca deve retornar null.");
 
         verify(shoppingCartRepository).save(shoppingCartEntity);
-    }
-
-    @Test
-    @DisplayName("")
-    void whenShoppingCartExistsAndProductExists_shouldAddProductNegative() {
-
-        ProductEntity productA = ProductEntity.builder()
-                .id("product3")
-                .name("Product 3")
-                .price(BigDecimal.valueOf(10.0))
-                .quantity(1)
-                .build();
-
-        Product productB = Product.builder()
-                .id("product2")
-                .name("Product 2")
-                .price(BigDecimal.valueOf(15.0))
-                .quantity(1)
-                .build();
-
-        shoppingCartEntity = ShoppingCartEntity.builder()
-                .id("shoppingCart1")
-                .products(new ArrayList<>(List.of(productB)))
-                .userId(user.getId())
-                .build();
-        int quantity = 0;
-
-        when(shoppingCartRepository.findByUserId(user.getId()))
-                .thenReturn(Optional.of(shoppingCartEntity));
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> shoppingCartService.addProduct(productA.id(), 0)
-        );
-        int resultQuantity = quantity >= 0? quantity : productA.quantity();
-
-        //assertEquals(2, exception.getProducts().size());
-        assertEquals("Product cant be added!", exception.getMessage());
-        assertEquals(0, resultQuantity);
-
-    }
-
-    @Test
-    @DisplayName("When containing shopping cart and product,but quantity the product 0, should execption.")
-    void shouldThrowExceptionWhenAddingNegativeQuantity() {
-        ProductEntity productA = ProductEntity.builder()
-                .id("product1")
-                .name("Product 1")
-                .price(BigDecimal.valueOf(10.0))
-                .quantity(1)
-                .build();
-
-        Product productB = Product.builder()
-                .id("product2")
-                .name("Product 2")
-                .price(BigDecimal.valueOf(15.0))
-                .quantity(1)
-                .build();
-
-        shoppingCartEntity = ShoppingCartEntity.builder()
-                .id("shoppingCart1")
-                .products(new ArrayList<>(List.of(productB)))
-                .userId(user.getId())
-                .build();
-
-        when(shoppingCartRepository.findByUserId(user.getId()))
-                .thenReturn(Optional.of(shoppingCartEntity));
-
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,
-                () -> shoppingCartService.addProduct(productA.id(), -2)
-        );
-
-        assertEquals("Product cant be added!", exception.getMessage());
-        assertEquals(1, shoppingCartEntity.getProducts().size());
     }
 
     @Test
@@ -341,21 +245,6 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    @DisplayName("Should to throw exception not find shopping cart.")
-    void shouldExceptionNoFindShoppingCart() {
-
-        when(shoppingCartRepository.findByUserId(user.getId()))
-                .thenReturn(Optional.empty());
-
-        RuntimeException exception = assertThrows(
-                RuntimeException.class,()->shoppingCartService.delete()
-        );
-
-        assertEquals("ShoppingCart not found!", exception.getMessage());
-
-    }
-
-    @Test
     @DisplayName("Should find shopping cart the user.")
     void shouldFindShoppingCartInUser() {
 
@@ -385,6 +274,7 @@ class ShoppingCartServiceTest {
 
         ShoppingCartResponse shoppingCart = shoppingCartService.find();
 
+        assertNotNull(shoppingCart, "O método nunca deve retornar null.");
         assertEquals(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(LocalDateTime.now()), shoppingCart.date());
         assertEquals(2,shoppingCart.products().size());
         assertEquals(shoppingCart.userId(), user.getId());
@@ -392,17 +282,148 @@ class ShoppingCartServiceTest {
         assertEquals(shoppingCart.totalPrice(), BigDecimal.valueOf(25.0));
     }
 
-    @Test
-    @DisplayName("")
-    void shouldThrowExceptionWhenAllShoppingCartNotFound(){
+    @Nested
+    class ExceptionsMessage{
 
-        when(shoppingCartRepository.findAll())
-                .thenReturn(List.of());
+        @Test
+        @DisplayName("Should throw exception when product not found in the repository")
+        void shouldThrowExceptionWhenProductNotFound(){
+            shoppingCartEntity = ShoppingCartEntity.builder()
+                    .id("shoppingCart1")
+                    .products(List.of())
+                    .userId(user.getId())
+                    .build();
+            String idProduct = "Product1";
 
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> shoppingCartService.findAll());
+            when(productRepository.findById(idProduct))
+                    .thenReturn(Optional.empty());
 
-        assertEquals("ShoppingCart not found!", exception.getMessage());
+            RuntimeException exception = assertThrows(RuntimeException.class,
+                    () -> shoppingCartService.addProduct(idProduct, 1));
 
+            assertEquals("Product not found!", exception.getMessage());
+
+            verify(shoppingCartRepository).findByUserId(user.getId());
+            verify(productRepository).findById(idProduct);
+        }
+
+        @Test
+        @DisplayName("")
+        void whenShoppingCartExistsAndProductExists_shouldAddProductNegative() {
+
+            ProductEntity productA = ProductEntity.builder()
+                    .id("product3")
+                    .name("Product 3")
+                    .price(BigDecimal.valueOf(10.0))
+                    .quantity(1)
+                    .build();
+
+            Product productB = Product.builder()
+                    .id("product2")
+                    .name("Product 2")
+                    .price(BigDecimal.valueOf(15.0))
+                    .quantity(1)
+                    .build();
+
+            shoppingCartEntity = ShoppingCartEntity.builder()
+                    .id("shoppingCart1")
+                    .products(new ArrayList<>(List.of(productB)))
+                    .userId(user.getId())
+                    .build();
+            int quantity = 0;
+
+            when(shoppingCartRepository.findByUserId(user.getId()))
+                    .thenReturn(Optional.of(shoppingCartEntity));
+            RuntimeException exception = assertThrows(
+                    RuntimeException.class,
+                    () -> shoppingCartService.addProduct(productA.id(), 0)
+            );
+
+            assertEquals("Product cant be added!", exception.getMessage());
+            assertEquals(0, quantity);
+
+        }
+
+        @Test
+        @DisplayName("When containing shopping cart and product,but quantity the product 0, should execption.")
+        void shouldThrowExceptionWhenAddingNegativeQuantity() {
+            ProductEntity productA = ProductEntity.builder()
+                    .id("product1")
+                    .name("Product 1")
+                    .price(BigDecimal.valueOf(10.0))
+                    .quantity(1)
+                    .build();
+
+            Product productB = Product.builder()
+                    .id("product2")
+                    .name("Product 2")
+                    .price(BigDecimal.valueOf(15.0))
+                    .quantity(1)
+                    .build();
+
+            shoppingCartEntity = ShoppingCartEntity.builder()
+                    .id("shoppingCart1")
+                    .products(new ArrayList<>(List.of(productB)))
+                    .userId(user.getId())
+                    .build();
+
+            when(shoppingCartRepository.findByUserId(user.getId()))
+                    .thenReturn(Optional.of(shoppingCartEntity));
+
+            RuntimeException exception = assertThrows(
+                    RuntimeException.class,
+                    () -> shoppingCartService.addProduct(productA.id(), -2)
+            );
+
+            assertEquals("Product cant be added!", exception.getMessage());
+            assertEquals(1, shoppingCartEntity.getProducts().size());
+        }
+
+        @Test
+        @DisplayName("Should to throw exception not find shopping cart.")
+        void shouldExceptionNoFindShoppingCart() {
+
+            when(shoppingCartRepository.findByUserId(user.getId()))
+                    .thenReturn(Optional.empty());
+
+            RuntimeException exception = assertThrows(
+                    RuntimeException.class,()->shoppingCartService.delete()
+            );
+
+            assertEquals("ShoppingCart not found!", exception.getMessage());
+
+        }
+
+        @Test
+        @DisplayName("")
+        void shouldThrowExceptionWhenAllShoppingCartNotFound(){
+
+            when(shoppingCartRepository.findAll())
+                    .thenReturn(List.of());
+
+            RuntimeException exception = assertThrows(RuntimeException.class,
+                    () -> shoppingCartService.findAll());
+
+            assertEquals("ShoppingCart not found!", exception.getMessage());
+
+        }
+
+        @Test
+        @DisplayName("")
+        void shouldThrowExceptionWhenAllShoppingCartNotFoundListEmpty(){
+            ShoppingCartEntity cart = ShoppingCartEntity.builder()
+                    .id("shoppingCart1")
+                    .userId(user.getId())
+                    .products(new ArrayList<>(List.of()))
+                    .build();
+
+            when(shoppingCartRepository.findAll())
+                    .thenReturn(List.of(cart));
+
+            List<ShoppingCartEntity> result = shoppingCartService.findAll();
+
+            assertFalse(result.isEmpty(), "A lista não deveria estar vazia.");
+
+        }
     }
 }

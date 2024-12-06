@@ -65,6 +65,7 @@ pitest {
 	verbose = true
 	threads = 2
 	outputFormats = ['HTML']
+	mutators = ['ALL']
 }
 
 tasks.named('test') {
