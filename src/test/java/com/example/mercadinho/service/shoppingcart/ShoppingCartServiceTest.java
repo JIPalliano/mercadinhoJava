@@ -227,9 +227,9 @@ class ShoppingCartServiceTest {
         when(shoppingCartRepository.save(shoppingCartEntity))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
-        shoppingCartService.addProduct(productA.id(), 2);
+        ShoppingCartEntity cart = shoppingCartService.addProduct(productA.id(), 2);
 
-        assertEquals(2, shoppingCartEntity.getProducts().size());
+        assertEquals(2, cart.getProducts().size());
 
         verify(shoppingCartRepository).save(shoppingCartEntity);
     }
@@ -237,11 +237,10 @@ class ShoppingCartServiceTest {
     @Test
     @DisplayName("")
     void whenShoppingCartExistsAndProductExists_shouldAddProductNegative() {
-        int quantity = 0;
 
         ProductEntity productA = ProductEntity.builder()
-                .id("product1")
-                .name("Product 1")
+                .id("product3")
+                .name("Product 3")
                 .price(BigDecimal.valueOf(10.0))
                 .quantity(1)
                 .build();
@@ -258,20 +257,20 @@ class ShoppingCartServiceTest {
                 .products(new ArrayList<>(List.of(productB)))
                 .userId(user.getId())
                 .build();
+        int quantity = 0;
 
         when(shoppingCartRepository.findByUserId(user.getId()))
                 .thenReturn(Optional.of(shoppingCartEntity));
-        when(productRepository.findById(productA.id())).thenReturn(Optional.of(productA));
-        when(shoppingCartRepository.save(shoppingCartEntity))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-
-        ShoppingCartEntity result = shoppingCartService.addProduct(productA.id(), 0);
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> shoppingCartService.addProduct(productA.id(), 0)
+        );
         int resultQuantity = quantity >= 0? quantity : productA.quantity();
 
-        assertEquals(2, result.getProducts().size());
+        //assertEquals(2, exception.getProducts().size());
+        assertEquals("Product cant be added!", exception.getMessage());
         assertEquals(0, resultQuantity);
 
-        verify(shoppingCartRepository).save(shoppingCartEntity);
     }
 
     @Test
