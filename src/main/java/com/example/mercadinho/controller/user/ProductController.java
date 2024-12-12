@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -42,8 +44,8 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "Produto não encontrado no banco.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
-    public ProductEntity findById(@PathVariable("id-product") ProductEntity idProduct) {
-        return this.facade.findById(idProduct);
+    public Mono<ProductEntity> findById(@PathVariable("id-product") ProductEntity idProduct) {
+        return facade.findById(idProduct);
     }
 
     @GetMapping
@@ -64,7 +66,7 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "Produtos não encontrados no banco.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
-    public List<ProductEntity> findAll() {
+    public Flux<ProductEntity> findAll() {
         return this.facade.findAll();
     }
 

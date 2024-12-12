@@ -10,6 +10,8 @@ import com.example.mercadinho.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,27 +30,38 @@ public class ShoppingCartService implements ShoppingCartFacade {
     //private final ShippingService shippingService;
 
     @Override
-    public ShoppingCartEntity create(String idProduct, Integer quantity) {
-        return productRepository.findById(idProduct).map(product -> shoppingCartRepository.save(ShoppingCartEntity.builder()
-                .products(List.of(Product.builder()
-                        .id(idProduct)
-                        .name(product.name())
-                        .price(product.price())
-                        .quantity(quantity > 0 ? quantity : product.quantity())
-                        .build()))
-                .userId(UserService.getCurrentUser().getId())
-                .date(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(LocalDateTime.now()))
-                .build())).orElseThrow(() -> new RuntimeException("Product not found!"));
+    public Mono<ShoppingCartEntity> create(String idProduct, Integer quantity) {
+        return productRepository.findById(idProduct)
+                .switchIfEmpty(Mono.error(new RuntimeException("Product not found!")))
+                .flatMap(product -> {
+                    ShoppingCartEntity shoppingCart = ShoppingCartEntity.builder()
+                            .products(List.of(Product.builder()
+                                    .id(idProduct)
+                                    .name(product.name())
+                                    .price(product.price())
+                                    .quantity(quantity > 0 ? quantity : product.quantity())
+                                    .build()))
+                            .userId(UserService.getCurrentUser().getId())
+                            .date(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(LocalDateTime.now()))
+                            .build();
+
+                    return shoppingCartRepository.save(shoppingCart);
+                });
     }
 
     @Override
-    public ShoppingCartEntity addProduct(String idProduct, Integer quantity) {
+    public Mono<ShoppingCartEntity> addProduct(String idProduct, Integer quantity) {
         return shoppingCartRepository.findByUserId(UserService.getCurrentUser().getId())
-                .map(shoppingCartEntity -> {
-                    updateProductQuantity(shoppingCartEntity.getProducts(), idProduct, quantity);
-                    return shoppingCartRepository.save(shoppingCartEntity);
+                .flatMap(shoppingCartEntity -> {
+                    updateProductQuantity(
+                            shoppingCartEntity.map(ShoppingCartEntity::getProducts).orElseThrow(()->new RuntimeException("No products")),
+                            idProduct,
+                            quantity
+                    );
+                    return shoppingCartRepository.save(shoppingCartEntity.orElseThrow(() -> new RuntimeException("No products!")));
                 })
-                .orElseGet(() -> create(idProduct, quantity));
+                .switchIfEmpty(create(idProduct, quantity));
+
     }
 
     private void updateProductQuantity(List<Product> products, String idProduct, Integer quantity) {
@@ -66,7 +79,7 @@ public class ShoppingCartService implements ShoppingCartFacade {
                         },
                         () -> {
                             if (quantity > 0) {
-                                products.add(findProduct(idProduct, quantity));
+                                products.add(findProduct(idProduct, quantity).switchIfEmpty(Mono.error(new RuntimeException("Product not found!"))).block());
                             }else{
                                 throw new RuntimeException("Product cant be added!");
                             }
@@ -74,53 +87,54 @@ public class ShoppingCartService implements ShoppingCartFacade {
                 );
     }
 
-    private Product findProduct( String idProduct, Integer quantity) {
-        return productRepository.findById(idProduct).map(productEntity -> Product.builder()
+    private Mono<Product> findProduct( String idProduct, Integer quantity) {
+        return productRepository.findById(idProduct)
+                .switchIfEmpty(Mono.error(new RuntimeException("Product not found!")))
+                .map(productEntity -> Product.builder()
                 .id(idProduct)
                 .name(productEntity.name())
                 .price(productEntity.price())
                 .quantity(quantity)
-                .build()).orElseThrow(() -> new RuntimeException("Product not found!"));
-    }
-
-
-    @Override
-    public void delete() {
-        shoppingCartRepository.findByUserId(UserService.getCurrentUser().getId())
-                .ifPresentOrElse(
-                        shoppingCart -> shoppingCartRepository.deleteById(shoppingCart.getId()),
-                        ()-> {throw new RuntimeException("ShoppingCart not found!");}
-                );
+                .build());
     }
 
     @Override
-    public ShoppingCartResponse find() {
+    public Mono<Void> delete() {
         return shoppingCartRepository.findByUserId(UserService.getCurrentUser().getId())
-                .map(shoppingCartEntity -> {
-                    int totalQuantity = shoppingCartEntity.getProducts().stream()
-                            .mapToInt(Product::getQuantity)
-                            .sum();
+                .doOnNext(
+                        shoppingCart -> shoppingCartRepository.deleteById(String.valueOf(shoppingCart.map(ShoppingCartEntity::getId)))
+                ).then();
+    }
 
-                    BigDecimal totalPrice = shoppingCartEntity.getProducts().stream()
+    @Override
+    public Mono<ShoppingCartResponse> find() {
+        return shoppingCartRepository.findByUserId(UserService.getCurrentUser().getId())
+                .switchIfEmpty(Mono.error(new RuntimeException("ShoppingCart not found!")))
+                .map(shoppingCartEntity -> {
+                    int totalQuantity = shoppingCartEntity.map(products ->
+                            products.getProducts().stream()
+                                    .mapToInt(Product::getQuantity)
+                                    .sum()
+                    ).orElse(0);
+
+                    BigDecimal totalPrice = shoppingCartEntity.map(shoppingCart->shoppingCart.getProducts().stream()
                             .map(product -> product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity())))
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                            .reduce(BigDecimal.ZERO, BigDecimal::add)).orElse(BigDecimal.ZERO);
 
                     return ShoppingCartResponse.builder()
-                            .id(shoppingCartEntity.getId())
-                            .products(shoppingCartEntity.getProducts())
+                            .id(shoppingCartEntity.map(ShoppingCartEntity::getId).orElseThrow())
+                            .products(shoppingCartEntity.map(ShoppingCartEntity::getProducts).orElseThrow())
                             .totalPrice(totalPrice)
                             .quantity(totalQuantity)
-                            .userId(shoppingCartEntity.getUserId())
-                            .date(shoppingCartEntity.getDate())
+                            .userId(shoppingCartEntity.map(ShoppingCartEntity::getUserId).orElseThrow())
+                            .date(shoppingCartEntity.map(ShoppingCartEntity::getDate).orElseThrow())
                             .build();
-                })
-                .orElseThrow(()-> new RuntimeException("ShoppingCart not found!"));
+                });
     }
     @Override
-    public List<ShoppingCartEntity> findAll() {
-        return Optional.of(shoppingCartRepository.findAll())
-                .filter(carts -> !carts.isEmpty())
-                .orElseThrow(() -> new RuntimeException("ShoppingCart not found!"));
+    public Flux<ShoppingCartEntity> findAll() {
+        return shoppingCartRepository.findAll()
+                .switchIfEmpty(Flux.error(new RuntimeException("ShoppingCart not found!")));
     }
 
 }

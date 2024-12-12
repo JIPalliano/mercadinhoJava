@@ -2,12 +2,16 @@ package com.example.mercadinho.service.product;
 
 import com.example.mercadinho.controller.request.ProductRequest;
 import com.example.mercadinho.domain.repository.ProductRepository;
-import com.example.mercadinho.domain.repository.ShoppingCartRepository;
 import com.example.mercadinho.domain.repository.model.entity.ProductEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -16,36 +20,37 @@ public class ProductService implements ProductFacade{
     private final ProductRepository productRepository;
 
     @Override
-    public ProductEntity createProduct(ProductRequest request){
+    public Mono<ProductEntity> createProduct(ProductRequest request){
         return productRepository.save(ProductEntity.builder()
                 .name(request.name())
                 .price(request.price())
                 .quantity(request.quantity())
-                .build());
+                .build()).switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"))
+        );
     }
 
     @Override
-    public ProductEntity updateProduct(String idProduct, ProductRequest request){
-        return productRepository.findById(idProduct).map(product -> productRepository.save(ProductEntity.builder()
+    public Mono<ProductEntity> updateProduct(String idProduct, ProductRequest request){
+        return productRepository.findById(idProduct).flatMap(product -> productRepository.save(ProductEntity.builder()
                 .id(product.id())
                 .name(request.name())
                 .price(request.price())
                 .quantity(request.quantity())
-                .build())).orElseThrow();
+                .build()));
     }
 
     @Override
-    public void deleteProduct(String idProduct){
-        productRepository.deleteById(idProduct);
+    public Mono<Void> deleteProduct(String idProduct){
+        return productRepository.deleteById(idProduct);
     }
 
     @Override
-    public ProductEntity findById(ProductEntity id){
-        return productRepository.findById(id.id()).orElseThrow();
+    public Mono<ProductEntity> findById(ProductEntity id){
+        return productRepository.findById(id.id());
     }
 
     @Override
-    public List<ProductEntity> findAll(){
+    public Flux<ProductEntity> findAll(){
         return productRepository.findAll();
     }
 

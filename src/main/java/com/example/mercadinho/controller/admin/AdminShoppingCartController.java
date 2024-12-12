@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class AdminShoppingCartController {
             @ApiResponse(responseCode = "500", description = "Carrinhos não encontrado no banco.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
-    public List<ShoppingCartEntity> findAll() {
+    public Flux<ShoppingCartEntity> findAll() {
         return this.shoppingCartFacade.findAll();
     }
 

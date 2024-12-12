@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 
 @RestController
@@ -44,7 +45,7 @@ public class AdminProductController {
             @ApiResponse(responseCode = "500", description = "Produto não encontrado no banco.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
-    public ProductEntity updateProduct(@PathVariable("id-product") String idProduct, @RequestBody ProductRequest request){
+    public Mono<ProductEntity> updateProduct(@PathVariable("id-product") String idProduct, @RequestBody ProductRequest request){
         return this.productFacade.updateProduct(idProduct, request);
     }
 
@@ -67,7 +68,7 @@ public class AdminProductController {
             @ApiResponse(responseCode = "500", description = "Produto não encontrado no banco.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
-    public ProductEntity createProduct(@RequestBody ProductRequest request) {
+    public Mono<ProductEntity> createProduct(@RequestBody ProductRequest request) {
         return this.productFacade.createProduct(request);
     }
 
@@ -90,8 +91,8 @@ public class AdminProductController {
             @ApiResponse(responseCode = "500", description = "Produto não encontrado no banco.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
-    public void deleteProduct(@PathVariable("id-product") String idProduct){
-        this.productFacade.deleteProduct(idProduct);
+    public Mono<Void> deleteProduct(@PathVariable("id-product") String idProduct){
+        return this.productFacade.deleteProduct(idProduct);
     }
 
 }

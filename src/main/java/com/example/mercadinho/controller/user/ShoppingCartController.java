@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+import reactor.core.publisher.Mono;
 
 
 @RestController
@@ -45,7 +45,7 @@ public class ShoppingCartController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
 
-    public ShoppingCartEntity create(@PathVariable("id-product") String idProduct, @RequestParam Integer quantity) {
+    public Mono<ShoppingCartEntity> create(@PathVariable("id-product") String idProduct, @RequestParam Integer quantity) {
         return this.facade.create(idProduct, quantity);
     }
 
@@ -69,7 +69,7 @@ public class ShoppingCartController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
 
-    public ShoppingCartEntity addProduct(@PathVariable("id-product") String idProduct, @RequestParam Integer quantity) {
+    public Mono<ShoppingCartEntity> addProduct(@PathVariable("id-product") String idProduct, @RequestParam Integer quantity) {
         return this.facade.addProduct(idProduct, quantity);
     }
 
@@ -93,8 +93,8 @@ public class ShoppingCartController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
 
-    public void delete() {
-        this.facade.delete();
+    public Mono<Void> delete() {
+        return this.facade.delete();
     }
 
     @GetMapping(path="/user-shopping-cart")
@@ -117,7 +117,7 @@ public class ShoppingCartController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
 
-    public ShoppingCartResponse find(){
+    public Mono<ShoppingCartResponse> find(){
         return this.facade.find();
     }
 

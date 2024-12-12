@@ -2,19 +2,21 @@ package com.example.mercadinho.service.shoppingcart;
 
 import com.example.mercadinho.controller.response.ShoppingCartResponse;
 import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface ShoppingCartFacade {
-    ShoppingCartEntity create(String idProduct, Integer quantity);
+    Mono<ShoppingCartEntity> create(String idProduct, Integer quantity);
 
-    ShoppingCartResponse find();
+    Mono<ShoppingCartResponse> find();
 
-    ShoppingCartEntity addProduct(String idProduct, Integer quantity);
+    Mono<ShoppingCartEntity> addProduct(String idProduct, Integer quantity);
 
-    void delete();
+    Mono<Void> delete();
 
-    List<ShoppingCartEntity> findAll();
+    Flux<ShoppingCartEntity> findAll();
 
 //    ShoppingCartEntity findShoppingCartCookie();
 

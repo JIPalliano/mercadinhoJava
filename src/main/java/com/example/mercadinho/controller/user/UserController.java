@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
+import reactor.core.publisher.Mono;
 
 
 @RestController
@@ -45,7 +45,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Login não encontrado no banco.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
-    public LoginResponse loginUser(@RequestBody LoginRequest loginRequest) {
+    public Mono<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
         return userService.loginUser(loginRequest);
     }
 
@@ -68,7 +68,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Registro não efetuado no banco.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
-    public UserResponse registerUser(@RequestBody UserRequest request){
+    public Mono<UserResponse> registerUser(@RequestBody UserRequest request){
         return userService.registerUser(request);
     }
 
