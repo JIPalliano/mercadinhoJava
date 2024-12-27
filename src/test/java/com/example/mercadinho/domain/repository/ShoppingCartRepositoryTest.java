@@ -1,8 +1,8 @@
 package com.example.mercadinho.domain.repository;
 
-import com.example.mercadinho.domain.repository.model.Product;
-import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
-import com.example.mercadinho.service.user.UserService;
+import com.example.mercadinho.infrastructure.repository.ShoppingCartRepository;
+import com.example.mercadinho.infrastructure.repository.model.Product;
+import com.example.mercadinho.infrastructure.repository.model.entity.ShoppingCartEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,12 +1,12 @@
 package com.example.mercadinho.service.product;
 
 import com.example.mercadinho.controller.request.ProductRequest;
-import com.example.mercadinho.domain.repository.ProductRepository;
-import com.example.mercadinho.domain.repository.model.entity.ProductEntity;
+import com.example.mercadinho.domain.service.product.ProductService;
+import com.example.mercadinho.infrastructure.repository.ProductRepository;
+import com.example.mercadinho.infrastructure.repository.model.entity.ProductEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;

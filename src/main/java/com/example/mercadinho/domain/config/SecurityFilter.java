@@ -1,47 +1,57 @@
 package com.example.mercadinho.domain.config;
 
-import com.example.mercadinho.domain.repository.UserRepository;
-import com.example.mercadinho.service.user.TokenService;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.mercadinho.infrastructure.repository.UserRepository;
+import com.example.mercadinho.domain.service.user.TokenService;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class SecurityFilter  extends OncePerRequestFilter {
+public class SecurityFilter implements WebFilter {
 
     private final TokenService tokenService;
     private final UserRepository userRepository;
 
+
+    @NotNull
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = recoverToken(request);
-        String userId = tokenService.validateToken(token);
-        if(userId != null){
-            userRepository.findById(userId)
-                    .ifPresent(user->{
-                        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole()));
-                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-            });
+    public Mono<Void> filter( @NotNull ServerWebExchange exchange,
+                              @NotNull WebFilterChain chain ) {
+
+        String token = this.recoverToken( exchange );
+
+        if ( token != null ) {
+            return tokenService.validateToken( token )
+                    .flatMap( login -> userRepository.findByUsername( login )
+                            .flatMap( user -> {
+                                var authentication = new UsernamePasswordAuthenticationToken( user, null,
+                                        user.getAuthorities() );
+                                return chain.filter( exchange )
+                                        .contextWrite( ReactiveSecurityContextHolder
+                                                .withAuthentication( authentication ));
+                            })
+                    )
+                    .onErrorResume( e -> chain.filter( exchange ) );
         }
-        filterChain.doFilter(request, response);
+
+        return chain.filter( exchange );
     }
 
-    private String recoverToken(HttpServletRequest request){
-        String authHeader = request.getHeader("Authorization");
-        if(authHeader == null) return null;
-        return authHeader.replace("Bearer", "").strip();
+    private String recoverToken( ServerWebExchange exchange ) {
+        String authHeader = exchange.getRequest().getHeaders().getFirst( "Authorization" );
+        if ( authHeader == null ) return null;
+        return authHeader.replace("Bearer ", "");
     }
+
 }

@@ -3,8 +3,8 @@ package com.example.mercadinho.controller.user;
 
 
 import com.example.mercadinho.controller.response.ErrorResponse;
-import com.example.mercadinho.service.product.ProductFacade;
-import com.example.mercadinho.domain.repository.model.entity.ProductEntity;
+import com.example.mercadinho.domain.service.product.ProductFacade;
+import com.example.mercadinho.infrastructure.repository.model.entity.ProductEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,8 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 @RestController
 @AllArgsConstructor

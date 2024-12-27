@@ -1,12 +1,13 @@
 package com.example.mercadinho.service.shoppingcart;
 
 import com.example.mercadinho.controller.response.ShoppingCartResponse;
-import com.example.mercadinho.domain.repository.ProductRepository;
-import com.example.mercadinho.domain.repository.ShoppingCartRepository;
-import com.example.mercadinho.domain.repository.model.Product;
-import com.example.mercadinho.domain.repository.model.entity.ProductEntity;
-import com.example.mercadinho.domain.repository.model.entity.ShoppingCartEntity;
-import com.example.mercadinho.domain.repository.model.entity.UserEntity;
+import com.example.mercadinho.domain.service.shoppingcart.ShoppingCartService;
+import com.example.mercadinho.infrastructure.repository.ProductRepository;
+import com.example.mercadinho.infrastructure.repository.ShoppingCartRepository;
+import com.example.mercadinho.infrastructure.repository.model.Product;
+import com.example.mercadinho.infrastructure.repository.model.entity.ProductEntity;
+import com.example.mercadinho.infrastructure.repository.model.entity.ShoppingCartEntity;
+import com.example.mercadinho.infrastructure.repository.model.entity.UserEntity;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;

@@ -1,11 +1,9 @@
 package com.example.mercadinho.domain.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class RestConfig {
@@ -16,23 +14,17 @@ public class RestConfig {
 
     @Bean
     @Qualifier("tomtom")
-    public RestTemplate restTemplateTomtom(RestTemplateBuilder builder) {
-        DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory(BASE_URL_TOMTOM);
-        uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE); // Configure as needed
-
-        return builder
-                .uriTemplateHandler(uriBuilderFactory)
+    public WebClient WebClientTomtom() {
+        return WebClient.builder()
+                .baseUrl(BASE_URL_TOMTOM)
                 .build();
     }
 
     @Bean
     @Qualifier("viacep")
-    public RestTemplate restTemplateViaCep(RestTemplateBuilder builder) {
-        DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory(BASE_URL_VIA_CEP);
-        uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE); // Configure as needed
-
-        return builder
-                .uriTemplateHandler(uriBuilderFactory)
+    public WebClient WebClientViaCep() {
+        return WebClient.builder()
+                .baseUrl(BASE_URL_VIA_CEP)
                 .build();
     }
 

@@ -1,6 +1,6 @@
 package com.example.mercadinho.controller.response;
 
-import com.example.mercadinho.domain.repository.model.Product;
+import com.example.mercadinho.infrastructure.repository.model.Product;
 import lombok.Builder;
 
 import java.math.BigDecimal;
