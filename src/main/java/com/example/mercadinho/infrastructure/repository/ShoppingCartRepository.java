@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface ShoppingCartRepository extends ReactiveMongoRepository<ShoppingCartEntity, String> {
 
-    Mono<Optional<ShoppingCartEntity>> findByUserId(String userId);
+    Mono<ShoppingCartEntity> findByUserId(String userId);
 }

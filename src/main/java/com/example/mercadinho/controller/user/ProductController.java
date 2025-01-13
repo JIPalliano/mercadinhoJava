@@ -42,7 +42,7 @@ public class ProductController {
             @ApiResponse(responseCode = "500", description = "Produto não encontrado no banco.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
-    public Mono<ProductEntity> findById(@PathVariable("id-product") ProductEntity idProduct) {
+    public Mono<ProductEntity> findById(@PathVariable("id-product") String idProduct) {
         return facade.findById(idProduct);
     }
 

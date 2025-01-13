@@ -2,6 +2,7 @@ package com.example.mercadinho.domain.service.shoppingcart;
 
 import com.example.mercadinho.controller.response.ShoppingCartResponse;
 import com.example.mercadinho.infrastructure.repository.model.entity.ShoppingCartEntity;
+import com.example.mercadinho.infrastructure.repository.model.entity.UserEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

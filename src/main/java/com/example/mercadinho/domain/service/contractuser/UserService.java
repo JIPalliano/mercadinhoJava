@@ -1,4 +1,4 @@
-package com.example.mercadinho.domain.service.user;
+package com.example.mercadinho.domain.service.contractuser;
 
 import com.example.mercadinho.controller.request.LoginRequest;
 import com.example.mercadinho.controller.request.UserRequest;
@@ -6,8 +6,10 @@ import com.example.mercadinho.controller.response.LoginResponse;
 import com.example.mercadinho.controller.response.UserResponse;
 import com.example.mercadinho.infrastructure.repository.UserRepository;
 import com.example.mercadinho.infrastructure.repository.model.entity.UserEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,9 +58,11 @@ public class UserService implements ReactiveUserDetailsService {
             });
     }
 
-    public static UserEntity getCurrentUser(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return (UserEntity) principal;
+    public Mono<UserEntity> getCurrentUser(){
+        return ReactiveSecurityContextHolder.getContext()
+                .map(SecurityContext::getAuthentication)
+                .map(Authentication::getPrincipal)
+                .cast(UserEntity.class);
     }
 
     @Override

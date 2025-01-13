@@ -1,4 +1,4 @@
-package com.example.mercadinho.domain.service.user;
+package com.example.mercadinho.domain.service.contractuser;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Date;
 
 @Service
@@ -27,7 +25,7 @@ public class TokenService {
                 String token = JWT.create()
                         .withIssuer("mercadinho")
                         .withSubject( userEntity.getUsername() )
-                        .withExpiresAt(new Date(new Date().getTime() + 60 * 1000))
+                        .withExpiresAt(new Date(new Date().getTime() + 60 * 100000))
                         .sign( algorithm );
 
                 return Mono.just(token);

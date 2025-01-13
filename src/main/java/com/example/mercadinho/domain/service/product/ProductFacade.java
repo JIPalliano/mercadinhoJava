@@ -15,7 +15,7 @@ public interface ProductFacade{
 
 //    void deleteProductShoppingCart(String idProduct);
 
-    Mono<ProductEntity> findById(ProductEntity id);
+    Mono<ProductEntity> findById(String id);
 
     Flux<ProductEntity> findAll();
 }

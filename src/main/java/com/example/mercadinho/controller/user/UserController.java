@@ -6,7 +6,7 @@ import com.example.mercadinho.controller.response.ErrorResponse;
 import com.example.mercadinho.controller.response.LoginResponse;
 import com.example.mercadinho.controller.response.UserResponse;
 import com.example.mercadinho.infrastructure.repository.model.entity.ShoppingCartEntity;
-import com.example.mercadinho.domain.service.user.UserService;
+import com.example.mercadinho.domain.service.contractuser.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

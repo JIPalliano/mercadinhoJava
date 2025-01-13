@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -26,7 +27,7 @@ public class AdminProductController {
     private final ProductFacade productFacade;
 
     @PutMapping(path="{id-product}" )
-    @RolesAllowed("ADMIN")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Atualiza um produto", description = "Atualiza um produto a partir do ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Atualização do produto feito com sucesso.",
@@ -49,7 +50,7 @@ public class AdminProductController {
     }
 
     @PostMapping
-    @RolesAllowed("ADMIN")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Cria um produto", description = "Realiza a criação de um produto.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Produto criado com sucesso.",
@@ -72,7 +73,7 @@ public class AdminProductController {
     }
 
     @DeleteMapping(path="{id-product}")
-    @RolesAllowed("ADMIN")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Deleta produto", description = "Procura o produto em questão via ID e deleta.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Produto deletado com sucesso.",

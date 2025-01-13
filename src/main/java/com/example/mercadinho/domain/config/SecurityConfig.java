@@ -28,7 +28,7 @@ public class SecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(auth -> auth
-                        .pathMatchers(HttpMethod.POST,"/v1/auth/**").permitAll()
+                        .pathMatchers("/v1/auth/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .addFilterBefore(securityFilter, SecurityWebFiltersOrder.AUTHENTICATION) // Adiciona o filtro personalizado

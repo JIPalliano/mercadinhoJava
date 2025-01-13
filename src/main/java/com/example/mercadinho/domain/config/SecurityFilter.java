@@ -1,14 +1,12 @@
 package com.example.mercadinho.domain.config;
 
 import com.example.mercadinho.infrastructure.repository.UserRepository;
-import com.example.mercadinho.domain.service.user.TokenService;
+import com.example.mercadinho.domain.service.contractuser.TokenService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -35,8 +33,8 @@ public class SecurityFilter implements WebFilter {
             return tokenService.validateToken( token )
                     .flatMap( login -> userRepository.findByUsername( login )
                             .flatMap( user -> {
-                                var authentication = new UsernamePasswordAuthenticationToken( user, null,
-                                        user.getAuthorities() );
+                                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken( user, null,
+                                        user.getAuthorities());
                                 return chain.filter( exchange )
                                         .contextWrite( ReactiveSecurityContextHolder
                                                 .withAuthentication( authentication ));

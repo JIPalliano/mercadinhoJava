@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -19,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping(path="v1/shopping-cart")
 @Tag(name = "Carrinho de compras", description = "Gerenciamento de Carrinho de compras")
 public class ShoppingCartController {

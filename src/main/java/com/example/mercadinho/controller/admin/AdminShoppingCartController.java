@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,7 @@ public class AdminShoppingCartController {
 
 
     @GetMapping
-    @RolesAllowed("ADMIN")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Lista todos os produtos", description = "Procura todos os produtos e faz uma listagem.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Carrinhos de compras encontrados.",

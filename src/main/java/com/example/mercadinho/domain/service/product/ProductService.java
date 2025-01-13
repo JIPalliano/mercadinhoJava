@@ -43,8 +43,8 @@ public class ProductService implements ProductFacade{
     }
 
     @Override
-    public Mono<ProductEntity> findById(ProductEntity id){
-        return productRepository.findById(id.id());
+    public Mono<ProductEntity> findById(String idProduct){
+        return productRepository.findById(idProduct);
     }
 
     @Override
