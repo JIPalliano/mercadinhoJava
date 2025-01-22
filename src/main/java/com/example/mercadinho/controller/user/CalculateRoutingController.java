@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @AllArgsConstructor
@@ -19,11 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class CalculateRoutingController {
 
     private final ShippingService shippingService;
-
-//    @GetMapping("/")
-//    public GeocodingResponse routing(@RequestBody AddressRequest request) {
-//        return this.tomtomService.getCoordnates(request);
-//    }
 
     @GetMapping
     @Operation(summary = "Mostra rotas", description = "Mostra as rotas e informações.")
@@ -43,7 +39,7 @@ public class CalculateRoutingController {
             @ApiResponse(responseCode = "500", description = "Erro no banco.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class))})})
-    public ShippingResponse routing(@RequestParam String cep) {
+    public Mono<ShippingResponse> routing(@RequestParam String cep) {
         return shippingService.calculateShipping(cep);
     }
 

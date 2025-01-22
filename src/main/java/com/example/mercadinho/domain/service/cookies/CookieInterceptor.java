@@ -1,33 +1,35 @@
-//package com.example.mercadinho.domain.service.cookies;
-//
-//
-//import jakarta.servlet.http.Cookie;
-//import jakarta.servlet.http.HttpServletRequest;
-//import jakarta.servlet.http.HttpServletResponse;
-//import org.springframework.stereotype.Component;
-//import org.springframework.web.servlet.HandlerInterceptor;
-//
-//@Component
-//public class CookieInterceptor implements HandlerInterceptor {
-//
-//    // Intercepta a requisição antes de chegar ao controlador
-//    @Override
-//    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-//        // Ler os cookies existentes
-//        Cookie[] cookies = request.getCookies();
-//        if (cookies != null) {
-//            for (Cookie cookie : cookies) {
-//                System.out.println("Cookie encontrado: " + cookie.getName() + " = " + cookie.getValue());
-//            }
-//        }
-//
-//        // Adicionar um cookie na resposta, se necessário
-//        Cookie newCookie = new Cookie("interceptorCookie", "cookieValue");
-//        newCookie.setPath("mercadinho/api/v1/shoppintCart");
-//        newCookie.setMaxAge(3600); // 1 hora
-//        response.addCookie(newCookie);
-//
-//        return true; // Continua a execução da requisição
-//    }
-//
-//}
+package com.example.mercadinho.domain.service.cookies;
+
+import org.springframework.http.ResponseCookie;
+import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
+
+
+@Component
+public class CookieInterceptor implements WebFilter {
+
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        // Ler os cookies existentes
+        exchange.getRequest().getCookies().forEach((name, cookies) -> cookies
+                .forEach(cookie ->
+                        System.out.println("Cookie encontrado: " + cookie.getName() + " = " + cookie.getValue())));
+
+        // Adicionar um novo cookie à resposta
+        ResponseCookie newCookie = ResponseCookie.from("interceptorCookie", "cookieValue")
+                .path("/mercadinho/api/v1/shoppingCart") // Caminho do cookie
+                .maxAge(3600) // 1 hora
+                .httpOnly(true) // Torna o cookie HttpOnly
+                .build();
+
+        // Adiciona o cookie na resposta
+        exchange.getResponse().addCookie(newCookie);
+
+        // Continua a cadeia de execução
+        return chain.filter(exchange);
+    }
+
+}

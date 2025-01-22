@@ -4,6 +4,7 @@ import com.example.mercadinho.controller.request.LoginRequest;
 import com.example.mercadinho.controller.request.UserRequest;
 import com.example.mercadinho.controller.response.LoginResponse;
 import com.example.mercadinho.controller.response.UserResponse;
+import com.example.mercadinho.domain.service.cookies.CookieService;
 import com.example.mercadinho.infrastructure.repository.UserRepository;
 import com.example.mercadinho.infrastructure.repository.model.entity.UserEntity;
 import org.springframework.security.core.Authentication;
@@ -29,8 +30,10 @@ public class UserService implements ReactiveUserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final CookieService cookieService;
 
     public Mono<UserResponse> registerUser(UserRequest request){
+//        cookieService.createCookie();
         return userRepository.save(UserEntity.builder()
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))

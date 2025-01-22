@@ -26,7 +26,7 @@ public class TokenService {
                         .withIssuer("mercadinho")
                         .withSubject( userEntity.getUsername() )
                         .withExpiresAt(new Date(new Date().getTime() + 60 * 100000))
-                        .sign( algorithm );
+                        .sign(algorithm);
 
                 return Mono.just(token);
             } catch (Exception e) {
