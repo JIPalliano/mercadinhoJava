@@ -23,7 +23,6 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 @EnableWebFluxSecurity
 @Configuration
 @AllArgsConstructor
-@Data
 public class SecurityConfig {
 
     private SecurityFilter securityFilter;

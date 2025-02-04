@@ -1,6 +1,7 @@
 package com.example.mercadinho.infrastructure.repository.model.entity;
 
 import com.example.mercadinho.controller.response.UserResponse;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,8 @@ public class UserEntity implements UserDetails {
     @Id
     private String id;
     private String username;
+    @Email(regexp = ".+[@].+[\\.].+")
+    private String email;
     private String password;
     private List<String> roles;
 
@@ -32,6 +35,7 @@ public class UserEntity implements UserDetails {
         return UserResponse.builder()
                 .id(id)
                 .username(username)
+                .email(email)
                 .roles(roles)
                 .build();
     }

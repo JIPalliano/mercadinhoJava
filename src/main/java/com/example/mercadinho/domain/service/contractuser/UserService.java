@@ -1,5 +1,6 @@
 package com.example.mercadinho.domain.service.contractuser;
 
+import com.example.mercadinho.controller.request.EmailRequest;
 import com.example.mercadinho.controller.request.LoginRequest;
 import com.example.mercadinho.controller.request.UserRequest;
 import com.example.mercadinho.controller.response.LoginResponse;
@@ -7,6 +8,7 @@ import com.example.mercadinho.controller.response.UserResponse;
 import com.example.mercadinho.domain.service.cookies.CookieService;
 import com.example.mercadinho.infrastructure.repository.UserRepository;
 import com.example.mercadinho.infrastructure.repository.model.entity.UserEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -29,16 +31,29 @@ public class UserService implements ReactiveUserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final KafkaTemplate<String, EmailRequest> kafkaTemplate;
     private final TokenService tokenService;
-    private final CookieService cookieService;
+    //private final CookieService cookieService;
 
     public Mono<UserResponse> registerUser(UserRequest request){
-//        cookieService.createCookie();
         return userRepository.save(UserEntity.builder()
                 .username(request.username())
+                .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .roles(request.roles())
-                .build()).map(UserEntity::fromEntity).subscribeOn(Schedulers.boundedElastic());
+                .build())
+                .map(userEntity -> {
+                    kafkaTemplate.send(
+                            "Test-kafka-boys",
+                            1,
+                            null,
+                            EmailRequest.builder()
+                                    .username(request.username())
+                                    .email(request.email())
+                                    .build());
+                    return userEntity.fromEntity();
+                })
+                .subscribeOn(Schedulers.boundedElastic());
     }
 
     public Mono<LoginResponse> loginUser(LoginRequest request){

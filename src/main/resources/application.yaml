@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: mercadinho
+  cloud:
+    gateway:
+      enabled: true
+      routes:
+        - id: default_route
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/**
+          filters:
+            - RewritePath=/(?<segment>.*), /$\{segment}
+      httpclient:
+        pool:
+                  max-idle-time: 30000
+      discovery:
+        locator:
+                  enabled: true
+                  lower-case-service-id: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin
+  config:
+    import:
+  kafka:
+    bootstrap-servers: localhost:29092
+  data:
+    mongodb:
+      auto-index-creation: true
+      database: Demo
+      uri: mongodb+srv://ismaelpalliano120:hybo6KjKgSz7uMxp@demo.kmmhq.mongodb.net/demo?retryWrites=true&w=majority&appName=Demo
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+
+server:
+  port: 8080
+  http2:
+    enabled: true
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:sua-chave-secreta-de-32-caracteres-ou-mais}
