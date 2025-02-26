@@ -1,1 +1,5 @@
 rootProject.name = 'mercadinho'
+
+include 'integration'
+include 'impl'
+
