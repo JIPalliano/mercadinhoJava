@@ -23,7 +23,11 @@ spring:
   config:
     import:
   kafka:
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     bootstrap-servers: localhost:29092
+    streams:
+      application-id: "kafka_streams"
   data:
     mongodb:
       auto-index-creation: true

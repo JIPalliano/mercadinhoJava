@@ -77,6 +77,26 @@ tasks.named('bootBuildImage') {
 	builder = 'paketobuildpacks/builder-jammy-base:latest'
 }
 
+tasks.register('task_test') {
+	doLast {
+		println 'Executando a criação de uma task!'
+	}
+}
+
+tasks.named('task_test') {
+	group = 'test'
+	description = 'Task para testar o tasks.named'
+	doLast {
+		println 'Configuração adicional aplicada à task nometask.'
+	}
+}
+
+task 'new_test_task'{
+	doLast{
+		println 'executando um teste de uma task'
+	}
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

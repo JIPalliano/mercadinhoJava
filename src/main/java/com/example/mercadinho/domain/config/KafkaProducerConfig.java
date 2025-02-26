@@ -20,7 +20,7 @@ public class KafkaProducerConfig {
     private String bootstrapServers;
 
     @Bean
-    public <T> ProducerFactory<String, T> orderProducerFactory(){
+    public <T> ProducerFactory<String, T> emailProducerFactory(){
         Map<String, Object> props = new HashMap<>();
         props.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -31,7 +31,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public <T> KafkaTemplate<String, T> kafkaTemplate(){
-        return new KafkaTemplate<>(orderProducerFactory());
+        return new KafkaTemplate<>(emailProducerFactory());
     }
 
 }

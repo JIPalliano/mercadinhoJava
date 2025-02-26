@@ -5,6 +5,7 @@ import com.example.mercadinho.controller.request.LoginRequest;
 import com.example.mercadinho.controller.request.UserRequest;
 import com.example.mercadinho.controller.response.LoginResponse;
 import com.example.mercadinho.controller.response.UserResponse;
+import com.example.mercadinho.domain.config.KafkaStreamsBuilder;
 import com.example.mercadinho.domain.service.cookies.CookieService;
 import com.example.mercadinho.infrastructure.repository.UserRepository;
 import com.example.mercadinho.infrastructure.repository.model.entity.UserEntity;

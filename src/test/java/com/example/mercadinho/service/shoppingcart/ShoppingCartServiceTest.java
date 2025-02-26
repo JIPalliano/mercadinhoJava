@@ -53,7 +53,7 @@ class ShoppingCartServiceTest {
                 .id("user1")
                 .username("user1")
                 .password("password1")
-                .role("ADMIN")
+                .roles("ADMIN")
                 .build();
 
         UsernamePasswordAuthenticationToken authentication =
