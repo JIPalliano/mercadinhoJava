@@ -1,0 +1,16 @@
+plugins{
+  id 'java'
+  id "com.github.node-gradle.node" version "7.1.0"
+}
+
+node{
+  version = '20.17.0'
+  npmVersion = '11.1.0'
+  download = true
+}
+
+jar.dependsOn 'npm_run_build'
+
+jar{
+  from 'dist/sitemercadinho' into 'static'
+}

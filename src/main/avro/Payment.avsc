@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "Payment",
+  "namespace": "com.example.avro",
+  "fields": [
+    {"name": "payId", "type":"string"},
+    {"name": "status", "type": "string"},
+    {"name": "quantity", "type": "int"},
+    {"name": "total", "type": "string"}
+  ]
+}
