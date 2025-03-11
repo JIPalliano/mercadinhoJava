@@ -35,12 +35,7 @@ public class PaymentService {
                                         .stream()
                                         .map(product -> product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity())))
                                         .reduce(BigDecimal.ZERO, BigDecimal::add);
-                                log.info("erro ->{}", Payment.newBuilder()
-                                        .setPayId(payId)
-                                        .setQuantity(totalQuantity)
-                                        .setStatus("Success")
-                                        .setTotal(totalPrice.toString())
-                                        .build());
+
                                 kafkaTemplate.send(
                                         "product-trend",
                                         Payment.newBuilder()
