@@ -23,8 +23,6 @@ spring:
   config:
     import:
   kafka:
-    producer:
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     bootstrap-servers: localhost:29092
     streams:
       application-id: "kafka_streams"
@@ -42,9 +40,13 @@ server:
   http2:
     enabled: true
 
-logging:
-  level:
-    org.springframework.security: DEBUG
+#logging:
+#  level:
+#    org.apache.kafka: DEBUG
+#    org.springframework.kafka: DEBUG
+#    io.confluent: DEBUG
+#    org.apache.avro: DEBUG
+#    org.springframework.security: DEBUG
 
 api:
   security:

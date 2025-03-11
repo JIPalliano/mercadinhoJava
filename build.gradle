@@ -4,6 +4,7 @@ plugins {
 	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.6'
 	id 'info.solidsoft.pitest' version '1.15.0'
+	id 'com.github.davidmc24.gradle.plugin.avro' version '1.6.0'
 }
 
 group = 'com.example'
@@ -33,6 +34,8 @@ configurations {
 
 repositories {
 	mavenCentral()
+	gradlePluginPortal()
+	maven { url 'https://packages.confluent.io/maven/' }
 	maven { url 'https://repo.spring.io/milestone' }
 	maven { url 'https://repo.spring.io/snapshot' }
 }
@@ -43,6 +46,7 @@ ext{
 }
 
 dependencies {
+	implementation(project(':sitemercadinho'))
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -54,6 +58,10 @@ dependencies {
 	implementation 'org.apache.kafka:kafka-streams'
 	implementation 'org.springframework.cloud:spring-cloud-starter-gateway:4.2.0'
 	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'org.apache.kafka:kafka-clients:3.9.0'
+	implementation 'org.apache.avro:avro:1.11.4'
+	implementation 'io.confluent:kafka-avro-serializer:7.6.0'
+	implementation group: 'io.confluent', name: 'kafka-streams-avro-serde', version: '7.6.0'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -65,6 +73,16 @@ dependencies {
 	implementation 'org.pitest:pitest-junit5-plugin:1.2.1'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.3'
 
+}
+
+generateAvroJava {
+	source("${projectDir}/src/main/avro")
+}
+
+avro {
+	stringType = "String"
+	fieldVisibility = "PUBLIC"
+	outputCharacterEncoding = "UTF-8"
 }
 
 dependencyManagement {

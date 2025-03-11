@@ -10,6 +10,7 @@ import com.example.mercadinho.domain.service.cookies.CookieService;
 import com.example.mercadinho.infrastructure.repository.UserRepository;
 import com.example.mercadinho.infrastructure.repository.model.entity.UserEntity;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.reactive.ReactiveKafkaProducerTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -47,7 +48,7 @@ public class UserService implements ReactiveUserDetailsService {
                     kafkaTemplate.send(
                             "Test-kafka-boys",
                             1,
-                            null,
+                            "",
                             EmailRequest.builder()
                                     .username(request.username())
                                     .email(request.email())
