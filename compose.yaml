@@ -1,61 +1,62 @@
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    container_name: zookeeper
+    image: zookeeper:latest
     ports:
       - "2181:2181"
+    networks:
+      - kafka-net
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-
+      - ZOO_TICK_TIME=2000
+      - ZOO_INIT_LIMIT=10
+      - ZOO_SYNC_LIMIT=5
 
   kafka:
-    image: confluentinc/cp-kafka:latest
-    container_name: kafka
-    depends_on:
-      - zookeeper
+    image: bitnami/kafka:latest
     ports:
       - "9092:9092"
       - "29092:29092"
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,PLAINTEXT_HOST://:29092
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/9092"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      - zookeeper
+    networks:
+      - kafka-net
 
   schema-registry:
     image: confluentinc/cp-schema-registry:latest
-    container_name: schema-registry
-    depends_on:
-      - zookeeper
-      - kafka
     ports:
       - "8081:8081"
     environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
+      - SCHEMA_REGISTRY_HOST_NAME=schema-registry
+      - SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS=kafka:9092
+      - SCHEMA_REGISTRY_LISTENERS=http://0.0.0.0:8081
+      - SCHEMA_REGISTRY_DEBUG=true
+    depends_on:
+      - kafka
+    networks:
+      - kafka-net
 
-
-  control-center:
-    image: confluentinc/cp-enterprise-control-center:latest
-    container_name: control-center
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "9021:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local-kafka
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
     depends_on:
       - kafka
       - schema-registry
-    ports:
-      - "9021:9021"
-    environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: kafka:9092
-      CONTROL_CENTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      CONTROL_CENTER_REPLICATION_FACTOR: 1
-      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
-      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
-      CONTROL_CENTER_METRICS_TOPIC_RETENTION_MS: 86400000
-
+    networks:
+      - kafka-net
 
 networks:
-  default:
+  kafka-net:
     driver: bridge
